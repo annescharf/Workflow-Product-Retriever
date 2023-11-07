@@ -6,47 +6,69 @@ library("dplyr")
 library("openssl")
 library("fs")
 library("readr")
+library("move") # "indirect" dependency: required to open/read appended objects in movestack format
+#library("ctmm")
+
 
 # NOTE 1: HTTP requests to the MoveApps API built below based on the example code provided in
 # <https://github.com/movestore/movestore.github.io/blob/master/web-partner-api/example.html>.
 
-# NOTE 2: Code relies on the current the structure and attribute names of the
-# API. If some of these conventions change in the future, the code will most likely
-# be exposed to errors in HTTP requests
+# NOTE 2: Code relies on the current the structure and attribute names of MoveApps's
+# API. If some of its naming conventions change in the future, the code will most likely
+# be exposed to errors in HTTP requests.
 #
-# NOTE 3: Currently only appending data from products stored as csv, txt or rds files
+# NOTE 3: Currently only supporting products stored as csv, txt or rds files
 #
-# NOTE 4: the file extension of the 'output_file' generated in Apps is not
-# currently provided by the API, so here it is assumed they are all stored and
-# available as rds files
+# NOTE 4: file extension of the 'output_file' generated in Apps is not currently
+# provided by the API, so here we assumed it's always stored as an rds file.
 #
-# Note 5: Currently assuming Apps only appear once in a workflow. Repeated Apps
-# in the same workflow will cause this App to crash
+# Note 5: there is an inconsistency between the name of the output file in the
+# MoveApps GUI ('app-output.rds') and that in the API ('output_file'). Currently
+# hard-coding the renaming of "app-output" as "output_file", but this is
+# unguarded to potential/eventual harmonizing between API and GUI in the naming
+# of App output files
+#
+# TODO: implement support for Products comprising raster data and shapefiles
 
 
-rFunction = function(data, usr, pwd, workflow_title, app_title, product_file){
+rFunction = function(data, 
+                     usr, 
+                     pwd, 
+                     workflow_title,
+                     app_title = NULL,
+                     app_pos = NULL, 
+                     product_file){
   
   # input validation -----------------------------------------------------------
   assertthat::assert_that(mt_is_move2(data))
   assertthat::assert_that(assertthat::is.string(usr))
   assertthat::assert_that(assertthat::is.string(pwd))
-  assertthat::assert_that(assertthat::is.string(app_title))
+  assertthat::assert_that(assertthat::is.string(workflow_title))
+  if(!is.null(app_title)) assertthat::assert_that(assertthat::is.string(app_title))
+  if(!is.null(app_pos)) assertthat::assert_that(is.numeric(app_pos))
   assertthat::assert_that(assertthat::is.string(product_file))
+  
+  if(is.null(app_title) & is.null(app_pos)){
+    stop("At least one of the parameters `app_title` or `app_pos` must be specified", call. = FALSE)
+  }
+  
   
   # input processing -----------------------------------------------------------
   
   # Deal with inconsistency in naming of App output files between what is shown
-  # in the App Outputs panel in MoveApps and what is returned in the API response
+  # in the App Outputs panel in MoveApps and what is returned in the API
+  # response 
   if(grepl("app-output", x = product_file)){
-    product_file <- "output_file"
+    product_file <- "output_file.rds"
   }
+  
   # Get basename and extension of target file
   product_file_base <- fs::path_ext_remove(product_file)
   product_file_ext <- fs::path_ext(product_file)
   
   
   # fetch links to products from all Apps in the workflow of interest -----------
-  logger.info("Fetching API links to products in target worflow")
+  logger.info("Fetching API endpoints to Apps and associated Products in target Workflow")
   wf_products_resp <- get_workflow_products(usr, pwd)
   
   
@@ -61,64 +83,176 @@ rFunction = function(data, usr, pwd, workflow_title, app_title, product_file){
     ) |> 
     # split basename and extension
     dplyr::mutate(
+      # shift app positions one place as API counts them from zero :)
+      appPositionInWorkflow = appPositionInWorkflow + 1,
       file_basename = fs::path_ext_remove(fileName),
-      file_ext = fs::path_ext(fileName),
       # api does not return file extension of output_file, so assuming it's ALWAYS rds
-      file_ext = ifelse(file_basename == "output_file", "rds", file_ext)
+      file_ext = ifelse(file_basename == "output_file", "rds", fs::path_ext(fileName))
     )
 
   
-  # Check if App and product exists --------------------------------------------
-  logger.info("Check presence of target file in workflow")
-
-  # products in target app
-  app_products <- dplyr::filter(wf_products, appTitle == app_title)
   
-  if(nrow(app_products) == 0){
-    rlang::abort(message = c(
-      paste0("There is no App called '", app_title, "' in workflow '", 
-             workflow_title, "'"),
-      "i" = "Make sure the title of the target App is specified correctly in `app_title` (case-sensitive)"),
-      call = NULL)
+  # List products' metadata in target app  -------------------------------------
+  logger.info("Listing Products metadata in target App")
+  
+  if(not_null(app_pos) & is.null(app_title)){
+    
+    app_products <- wf_products |> 
+      dplyr::filter(appPositionInWorkflow == app_pos)
+    
+    # non-existent/invalid user-specified App position
+    if(nrow(app_products) == 0){
+      rlang::abort(message = c(
+        paste0("There is no App available in position #", app_pos, " of Workflow '", 
+               workflow_title, "'"),
+        "i" = "Please check the target Workflow page to get a valid App position number."),
+        call = NULL
+      )
+    }
+    
+    # set app title as stated in the API
+    app_title <- app_products$appTitle
+    
+  }else if(not_null(app_pos) & not_null(app_title)){
+    
+    app_products <- wf_products |> 
+      dplyr::filter(appPositionInWorkflow == app_pos, appTitle == app_title)
+    
+    # non-existent/invalid user-specified App title in user-specified position
+    if(nrow(app_products) == 0){
+      rlang::abort(message = c(
+        paste0("There is no App with name matching '", app_title, "' in position #", 
+               app_pos, " of Workflow '", workflow_title, "'"),
+        "i" = "Make sure parameters `app_title` and `app_pos` point coherently to the target App."
+      ),
+      call = NULL
+      )
+    }
+  } else if(is.null(app_pos) & not_null(app_title)){
+    
+    app_products <- wf_products |> 
+      dplyr::filter(appTitle == app_title)
+    
+    # non-existent/invalid user-specified App title
+    if(nrow(app_products) == 0){
+      rlang::abort(message = c(
+        paste0("There is no App with name matching '", app_title, "' in Workflow '", 
+               workflow_title, "'"),
+        "i" = paste0("Please check the Workflow page and make sure the",
+                     " title of the target App is spelled accurately in",
+                     " parameter `app_title` (case-sensitive)")
+      ),
+      call = NULL
+      )
+    }
+    
+    # Dealing with multiple copies of same app in a Workflow, when only app_title is specified
+    # Assumes Products in any given App have unique filenames
+    if(any(duplicated(app_products$fileName))){
+      rlang::abort(message = c(
+        "Unable to unambiguously identify the specified target App",
+        "x" = paste0("There is more than one copy of App '", app_title, 
+                     "' in the target Workflow '", workflow_title, "'"),
+        "i" = "Please provide the target App position in parameter `app_pos`"
+      ),
+      call = NULL
+      )
+    }
   }
+  
+  
+  # Get target Product metadata  --------------------------------------------
+  logger.info("Getting details of target Product")
   
   # target product
   prod_meta <- app_products |>
     dplyr::filter(file_basename == product_file_base)
   
+  # non-existent/invalid user-specified Product name 
   if(nrow(prod_meta) == 0){
     rlang::abort(message = c(
       paste0("There is no Product named '", product_file, "' in App '", 
              app_title, "' in Workflow '", workflow_title, "'"),
       "i" = paste0("Make sure the target product is an output of the specified",
-                   " App and its filename is defined correctly in `product_file` (case-sensitive)")), 
+                   " App and its filename is defined correctly in `product_file`",
+                   " (case-sensitive)")), 
       call = NULL)
   }
   
   
+  # Dealing multiple files in App with same basename, but different extensions
+  if(nrow(prod_meta) > 1){
+    
+    # If extension missing, throw error asking user to include it in filename
+    if(product_file_ext == ""){
+      
+      rlang::abort(message = c(
+        "Unable to unambiguously identify the target Product",
+        "x" = paste0("Found more than one Product with basename '", product_file, 
+               "' in App '", app_title, "' in Workflow '", workflow_title, "'"),
+        "i" = paste0("Please include the file extension when specifying the",
+        " filename of the target Product (parameter `product_file`)")), 
+        call = NULL)
+      
+    } else{
+      prod_meta <- prod_meta |>
+        dplyr::filter(file_ext == product_file_ext)
+    }
+  }
+  
+  
+  
   # Retrieve the target file  --------------------------------------------------
-  # NOTE: assumes files in a given app have unique names
-  logger.info("Downloading and processing data in target product")
   
-  prod_data <- get_product_data(usr, pwd, prod_meta$self, prod_meta$file_ext)
+  # NOTE: assumes files in a given app have unique filenames (i.e. basename + extension)
+  logger.info("Downloading and processing data in target Product")
+  
+  prod_object <- get_product_object(usr, pwd, prod_meta$self, prod_meta$file_ext)
 
-  # Attach fetched product data to input data ----------------------------------
-  logger.info("Append target product data to input dataset")
   
-  obj_to_append <- list(
+  
+  # Attach fetched product data to input data ----------------------------------
+  logger.info("Appending target Product object to input dataset")
+  
+  to_append <- list(
     metadata = prod_meta |> dplyr::select(-self),
-    data = prod_data
+    object = prod_object
   )
   
-  # get current auxiliary data, if any
-  aux_data <- attr(data, "appended_data")
+  # get current appended products (from upstream copy of 'Workflow-Products-Retriever'), if any
+  appended_products <- attr(data, "appended_products")
   
   # either append as a newly created list, or add to previous appended list
-  if(is.null(aux_data)){
-    attr(data, "appended_data") <- list(obj_to_append)
+  if(is.null(appended_products)){
+    attr(data, "appended_products") <- list(to_append)
+    appended_pos <- 1
   }else{
-    attr(data, "appended_data") <- append(aux_data, list(obj_to_append))
+    attr(data, "appended_products") <- append(appended_products, list(to_append))
+    appended_pos <- length(appended_products) + 1
   }
+  
+  
+  # Log out info on appended product
+  cat(
+    paste0(
+      "\nThe following Product was appended to list element #", appended_pos,
+      " of attribute `appended_products` of the input data object: \n\n",
+      "  Product: '", product_file, "' \n",
+      "File Size: '", prod_meta$fileSize, "' \n",
+      " Modified: '", prod_meta$modifiedAt, "' \n", 
+      "      App: '", prod_meta$appTitle, "' \n",
+      " Workflow: '", prod_meta$workflow_title, "' \n",
+      " Instance: '", prod_meta$instance_title, "' \n\n"
+    )
+  )
+  
+  
+  # Export metadata of appended product as artifact --------------------------------
+  readr::write_csv(
+    to_append$metadata, 
+    file = appArtifactPath("appended_product_metadata.csv")
+  )
+  
   
   logger.info("Job done!")
   
@@ -156,7 +290,8 @@ get_workflow_products <- function(usr, pwd){
       rlang::abort(
         message = "HTTP 401 Unauthorized: API request error due to invalid `usr` and/or `pwd`",
         parent = NA,
-        error = cnd
+        error = cnd, 
+        class = "httr2_http_401"
       )
     }
   )
@@ -166,13 +301,19 @@ get_workflow_products <- function(usr, pwd){
 #' /////////////////////////////////////////////////////////////////////////////
 #' Download product from API and convert to tibble
 #' 
-get_product_data <- function(usr, pwd, product_link, file_ext){
+get_product_object <- function(usr, pwd, product_link, file_ext){
   
-  if(file_ext %notin% c("csv", "rds", "txt")){
+  filetypes <- c("rds","csv", "txt")
+  
+  if(file_ext %notin% filetypes){
     rlang::abort(
       message = c(
-        paste0("'.", file_ext, "' is an unsupported format for products to append to input data"),
-        "i" = "Currently only supporting products stored in '.csv', '.txt' and '.rds' files"),
+        "Unsupported target Product file type",
+        "x" = paste0("'.", file_ext, "' files are currently not supported for appending",
+               " products from other Workflows to the input data"),
+        "i" = paste0("Presently only supporting Products stored as ", 
+                     combine_words(filetypes, before = "'.", after = "'"), " files")
+      ),
       class = "unsupported_file_extension",
       call = NULL
     )
@@ -187,32 +328,66 @@ get_product_data <- function(usr, pwd, product_link, file_ext){
   # Submit request
   prod_resp <- httr2::req_perform(prod_req)
   
-  # Write returned API response as an R object
+  # Parse returned API response as an R object
   if(file_ext %in% c("csv", "txt")){
     # convert data in body section to string and convert to tibble. 
-    # read_csv() accepts literal data as input
-    prod_data <- prod_resp |> 
+    # read_delim() accepts literal data as input
+    prod_obj <- prod_resp |> 
       httr2::resp_body_string() |>
-      readr::read_delim()
+      readr::read_delim(show_col_types = FALSE)
 
   }else if(file_ext == "rds"){
     
     # get type of compression 
     compression <- strsplit(httr2::resp_content_type(prod_resp), split = "/")[[1]][2]
     
-    prod_data <- prod_resp |> 
+    prod_obj <- prod_resp |> 
       httr2::resp_body_raw() |> 
       memDecompress(type = compression) |> 
       unserialize()
   }
   
-  return(prod_data)
+  return(prod_obj)
 }
 
 
 
 
 
+#'////////////////////////////////////////////////////////////////////////////////////
+# hacked version of stolen `knitr::combine_words`, to avoid dependency on whole {knitr}
+combine_words <- function(words, sep = ", ", and = " and ", before = "", after = before, 
+                          oxford_comma = FALSE) 
+{
+  n = length(words)
+  if (n == 0) 
+    return(words)
+  words = paste0(before, words, after)
+  if (n == 1) 
+    return(words)
+  if (n == 2) 
+    return(paste(words, collapse = if (is_blank(and)) sep else and))
+  if (oxford_comma && grepl("^ ", and) && grepl(" $", sep)) 
+    and = gsub("^ ", "", and)
+  words[n] = paste0(and, words[n])
+  if (!oxford_comma) {
+    words[n - 1] = paste0(words[n - 1:0], collapse = "")
+    words = words[-n]
+  }
+  paste(words, collapse = sep)
+}
+
+
+is_blank <- function(x){
+  grepl("^\\s*$", x)
+}
+  
+
+
 #' Useful wee helpers ///////////////////////////////////////////////////////
 "%notin%" <- Negate("%in%")
+not_null <- Negate(is.null)
+
+
+
                     
