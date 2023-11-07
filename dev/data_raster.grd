@@ -1,0 +1,26 @@
+[general]
+creator=R package 'raster'
+created=2023-11-01 15:57:09
+[georeference]
+nrows=559
+ncols=1803
+xmin=-830868.047216511
+ymin=-198751.970818923
+xmax=972131.952783489
+ymax=360248.029181077
+projection=+proj=aeqd +lat_0=-13 +lon_0=30 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs
+[data]
+datatype=FLT4S
+byteorder=little
+nbands=1
+bandorder=BIL
+categorical=FALSE
+minvalue=1
+maxvalue=1
+nodatavalue=-3.4e+38
+[legend]
+legendtype=
+values=
+color=
+[description]
+layername=layer
