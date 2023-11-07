@@ -36,7 +36,7 @@ multiple Products from other workflows. Retrieved objects are consecutively
 appended to the input's `appended_products` attribute as list elements.
 
 ::: {.callout-important}
-In order to use this functionality, the user must first create stable API links
+In order to use the App's functionality, the user must first create stable API links
 to the Workflow instance containing the desired Product(s). Instructions for
 generating API access credentials for your Workflows are available in the
 [MoveApps API Links guide](https://docs.moveapps.org/#/API).
@@ -44,7 +44,7 @@ generating API access credentials for your Workflows are available in the
 
 Using the Workflow instance API access credentials, users are required to specify the
 name of the target Product, along with either the title or the position of the
-App within Workflow where it is located. Please be aware that not all types of
+App within Workflow where it is located. Please beware that not all types of
 files can be retrieved. Currently supported Product file-types are: **`.csv`**,
 **`.txt`** and **`.rds`**.
 
