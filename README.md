@@ -73,12 +73,10 @@ used in the current Workflow. Furthermore, each list element under the
 - `object`, storing the actual Product object
 
 Appended objects in the Output data can be accessed via the function
-`attr()`.
-
-For example, to access the appended products in an output data object
-obtained after applying this App twice to retrieve Products from two
-different apps in a concurrent (mock) workflow, we could run the
-following:
+`attr()`. For example, to access the appended products in an output data
+object called `app_output` obtained after applying this App twice to
+retrieve Products from two different apps in a concurrent (mock)
+workflow, we could run the following:
 
 ``` r
 apnd_prods <- attr(app_output, "appended_products")
@@ -171,7 +169,7 @@ misspecification occurred. The most common misspecifications include:
 - inaccurate naming of target App and/or Product names,
 - absence of intended target Products in specified target App,
 - inconsistency between the specified name of the target App and the
-  specified position of the App in the target workflow
+  specified position of that App in the target workflow
 
 <div>
 
@@ -191,6 +189,6 @@ Parameters `usr`, `pwd` and `product_file` must be specified, whereas at
 least one of `app_title` and `app_pos` needs to be provided.
 
 The `workflow_title` parameter is optional since workflow identification
-is already provided by `usr`. However, we strongly recommend entering an
-clear and identifiable name for the target workflow to ensure clarity
+is already provided by `usr`. However, we strongly recommend specifying
+an clear and identifiable name for the target workflow to ensure clarity
 when using appended Products in downstream Apps.
