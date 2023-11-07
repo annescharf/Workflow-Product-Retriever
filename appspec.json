@@ -1,78 +1,146 @@
 {
-  "version": "1.1",
   "settings": [
-    {
-      "id": "sdk",
-      "name": "The name of the MoveApps SDK",
-      "description": "Showcase requesting a string input from the users of your app.",
-      "defaultValue": "MoveApps SDK",
+   {
+      "id": "usr",
+      "name": "ID of Target Workflow Instance",
+      "description": "Type-in the API's ID (i.e. username) of the Workflow Instance containing the target Product (check https://docs.moveapps.org/#/API).",
       "type": "STRING"
     },
     {
-      "id": "year",
-      "name": "The year",
-      "description": "Insert description for the year setting setting",
-      "defaultValue": 2022,
+      "id": "pwd",
+      "name": "Password of Target Workflow Instance",
+      "description": "Type-in the API's Password of the Workflow Instance containing the target Product (check https://docs.moveapps.org/#/API).",
+      "type": "STRING"
+    },
+    {
+      "id": "workflow_title",
+      "name": "Target Workflow Title",
+      "description": "Enter the name of the Workflow  with the target Product. While we recommend using the full title for clarity, aliases or acronyms are accepted - as long as you can recall which Workflow they refer to!",
+      "type": "STRING"
+    },
+    {
+      "id": "app_title",
+      "name": "Target App Title",
+      "description": "Enter the name of the App comprising the target Product. Please ensure the name of the App is accurate. Not required if 'Target App Position in Workflow' is specified.",
+      "defaultValue": null,
+      "type": "STRING"
+    },
+    {
+      "id": "app_pos",
+      "name": "Target App Position in Workflow",
+      "description": "Enter the position of the App containing the target Product in the Workflow's pipeline. Not required if 'Target App Title' is specified.",
+      "defaultValue": null,
       "type": "INTEGER"
     },
     {
-      "id": "yourLocalFileSettingId",
-      "name": "Personalization",
-      "description": "You can personalize the dashboard by providing a file named 'sample.txt'",
-      "type": "LOCAL_FILE"
+      "id": "product_file",
+      "name": "Target Product Filename",
+      "description": "Type-in the target Product name. Please ensure the filename is accurate. You can omit the extension, unless multiple artifact files share the same basename. Currently supported target Product file-types: '.rds', '.csv', and '.txt'.",
+      "type": "STRING"
     }
   ],
   "dependencies": {
     "R": [
       {
-        "name": "lubridate"
+        "name": "httr2"
       },
       {
         "name": "move2"
+      },
+      {
+        "name": "assertthat"
+      },
+      {
+        "name": "rlang"
+      },
+      {
+        "name": "dplyr"
+      },
+      {
+        "name": "openssl"
+      },
+      {
+        "name": "fs"
+      },
+      {
+        "name": "readr"
+      },
+      {
+        "name": "move"
       }
     ]
   },
   "createsArtifacts": true,
-  "providedAppFiles": [
-    {
-      "settingId": "yourLocalFileSettingId",
-      "from": "data/local_app_files/provided-app-files/yourLocalFileSettingId/"
-    }
-  ],
   "license": {
     "key": "MIT"
   },
   "language": "eng",
   "keywords": [
-    "example",
-    "template"
-  ],
+    "Workflow APIs",
+    "Parallel Workflows Integration",
+    "Data appending"
+    ],
   "people": [
     {
-      "firstName": "Charles",
+      "firstName": "Bruno",
       "middleInitials": null,
-      "lastName": "Darwin",
-      "email": "creator@example.com",
+      "lastName": "Caneco",
+      "email": "bruno@dmpstats.co.uk",
       "roles": [
         "author",
         "creator"
       ],
       "orcid": null,
-      "affiliation": null,
+      "affiliation": "DMP Statistical Solutions",
       "affiliationRor": null
+    },
+    {
+      "firstName": "Lindesay",
+      "middleInitials": "",
+      "lastName": "Scott-Hayward",
+      "email": "lass@st-andrews.ac.uk",
+      "roles": [
+        "author",
+        "creator"
+      ],
+      "orcid": "0000-0003-3402-533X",
+      "affiliation": "University of St Andrews",
+      "affiliationRor": "https://ror.org/02wn5qz54"
+    },
+    {
+      "firstName": "Monique",
+      "middleInitials": "",
+      "lastName": "MacKenzie",
+      "email": "monique.mackenzie@st-andrews.ac.uk",
+      "roles": [
+        "author",
+        "creator"
+      ],
+      "orcid": "0000-0002-8505-6585",
+      "affiliation": "University of St Andrews",
+      "affiliationRor": "https://ror.org/02wn5qz54"
+    },
+    {
+      "firstName": "Callum",
+      "middleInitials": "J.",
+      "lastName": "Clarke",
+      "email": "cjosephclarke@outlook.com",
+      "roles": [
+        "author",
+        "creator"
+      ],
+      "orcid": null,
+      "affiliation": "University of St Andrews",
+      "affiliationRor": "https://ror.org/02wn5qz54"
     }
   ],
   "funding": [
     {
-      "name": "funder name",
-      "comment": "grant for App"
+      "name": "North Carolina Zoo, US",
+      "comment": null
     }
   ],
-  "references": [
-    {
-      "type": "IsDescribedBy",
-      "note": "Darwin, C. 1900. The creation. Journal XY. 1-2",
-      "url": "https://anylink.xyz"
-    }
-  ]
+  "documentation": {
+    "url": "https://github.com/dmpstats/Workflow-Products-Retriever/blob/master/README.md"
+  }
 }
