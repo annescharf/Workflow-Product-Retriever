@@ -193,14 +193,15 @@ rFunction = function(data = NULL,
 
     # If extension missing, throw error asking user to include it in filename
     if(product_file_ext == ""){
+
       rlang::abort(message = c(
         "Unable to unambiguously identify the target Product",
-        "x" = paste0("Found more than one Product with basename '", product_file, 
+        "x" = paste0("Found more than one Product with basename '", product_file,
                "' in App '", app_title, "' in Workflow '", workflow_title, "'"),
         "i" = paste0("Please include the file extension when specifying the",
-        " filename of the target Product (parameter `product_file`)")), 
+        " filename of the target Product (parameter `product_file`)")),
         call = NULL)
-      
+
     } else{
       prod_meta <- prod_meta |>
         dplyr::filter(file_ext == product_file_ext)
@@ -317,7 +318,7 @@ get_product_object <- function(usr, pwd, product_link, file_ext){
       message = c(
         "Unsupported target Product file type",
         "x" = paste0("'.", file_ext, "' files are currently not supported for appending",
-               " products from other Workflows to the input data"),
+                     " products from other Workflows to the input data"),
         "i" = paste0("Presently only supporting Products stored as ", 
                      combine_words(filetypes, before = "'.", after = "'"), " files")
       ),
@@ -342,7 +343,7 @@ get_product_object <- function(usr, pwd, product_link, file_ext){
     prod_obj <- prod_resp |> 
       httr2::resp_body_string() |>
       readr::read_delim(show_col_types = FALSE)
-
+    
   }else if(file_ext == "rds"){
     
     # get type of compression 
