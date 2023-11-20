@@ -45,6 +45,18 @@ output <- rFunction(
 attr(output, "appended_products")
 
 
+# Starting with data == NULL, i.e an empty move2 object
+output <- rFunction(
+  data = NULL, 
+  usr = usr, 
+  pwd = pwd, 
+  workflow_title = "mock",
+  app_pos = 8,
+  product_file = "app-output")
+
+attr(output, "appended_products")
+
+
 
 
 

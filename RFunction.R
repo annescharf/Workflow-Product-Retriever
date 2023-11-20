@@ -28,10 +28,10 @@ library("move") # "indirect" dependency: required to open/read appended objects 
 # unguarded to potential/eventual harmonizing between API and GUI in the naming
 # of App output files
 #
-# TODO: implement support for Products comprising raster data and shapefiles
+# TODO: Expand support for Products comprising raster data and shapefiles
 
 
-rFunction = function(data, 
+rFunction = function(data = NULL, 
                      usr, 
                      pwd, 
                      workflow_title,
@@ -40,7 +40,7 @@ rFunction = function(data,
                      product_file){
   
   # input validation -----------------------------------------------------------
-  assertthat::assert_that(mt_is_move2(data))
+  if(!is.null(data)) assertthat::assert_that(mt_is_move2(data))
   assertthat::assert_that(assertthat::is.string(usr))
   assertthat::assert_that(assertthat::is.string(pwd))
   assertthat::assert_that(assertthat::is.string(workflow_title))
@@ -54,6 +54,14 @@ rFunction = function(data,
   
   
   # input processing -----------------------------------------------------------
+  
+  # generate empty move2 object to append retrieved objects to. This is to allow
+  # this App to be deployed as a MoveApps Workflow Starting App
+  if(is.null(data)){
+    data <- data.frame(timestamp = 1, track = "a", x = 0, y = 0) |> 
+      mt_as_move2("timestamp", "track", coords = c("x", "y")) |> 
+      filter_track_data(.track_id = "b") # make it empty
+  }
   
   # Deal with inconsistency in naming of App output files between what is shown
   # in the App Outputs panel in MoveApps and what is returned in the API
@@ -182,10 +190,9 @@ rFunction = function(data,
   
   # Dealing multiple files in App with same basename, but different extensions
   if(nrow(prod_meta) > 1){
-    
+
     # If extension missing, throw error asking user to include it in filename
     if(product_file_ext == ""){
-      
       rlang::abort(message = c(
         "Unable to unambiguously identify the target Product",
         "x" = paste0("Found more than one Product with basename '", product_file, 
