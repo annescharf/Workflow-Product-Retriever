@@ -35,7 +35,7 @@
     {
       "id": "product_file",
       "name": "Target Product Filename",
-      "description": "Type-in the target Product name. Please ensure the filename is accurate. You can omit the extension, unless multiple artifact files share the same basename. Currently supported target Product file-types: '.rds', '.csv', and '.txt'.",
+      "description": "Type-in the target Product name. Please ensure the filename is accurate. You can omit the file extension, unless multiple artifact files in the target App share the same basename . Currently supported target Product file-types: '.rds', '.csv', and '.txt'.",
       "type": "STRING"
     }
   ],

@@ -29,7 +29,7 @@ details).
 
 In a broader sense, its primary utility can be seen as a retriever and
 collector of Workflow Products covering a broad range of object types
-(`move2::move2_loc`, `move2::move2_non-loc`, `move::moveStack`,
+(`move2::move2_loc`, `move2::move2_nonloc`, `move::moveStack`,
 `data.frame`, `tibble`, model objects, etc.). The app explicitly
 refrains from attempting to combine or merge the fetched data with the
 input data, leaving these operations to subsequent downstream apps.
@@ -113,9 +113,9 @@ required if ‘Target App Title’ is specified. Default: `NULL`.
 
 **Target Product Filename** (`product_file`): the target Product name.
 Please ensure the filename is accurate. You can omit the extension,
-unless multiple artifact files share the same basename. Currently
-supported target Product file-types: ‘.rds’, ‘.csv’, and ‘.txt’.
-Default: `NULL`.
+unless multiple artifact files in the target App share the same
+basename. Currently supported target Product file-types: ‘.rds’, ‘.csv’,
+and ‘.txt’. Default: `NULL`.
 
 ### Most common errors
 
