@@ -67,6 +67,9 @@
       },
       {
         "name": "move"
+      },
+      {
+        "name": "purrr"
       }
     ]
   },

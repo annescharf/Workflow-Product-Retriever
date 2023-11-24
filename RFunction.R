@@ -6,6 +6,7 @@ library("dplyr")
 library("openssl")
 library("fs")
 library("readr")
+library("purrr")
 library("move") # "indirect" dependency: required to open/read appended objects in movestack format
 #library("ctmm")
 
