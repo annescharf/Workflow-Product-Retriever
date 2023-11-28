@@ -29,7 +29,7 @@ test_that("App input validation does its job", {
   
   expect_error(
     rFunction(data = test_data, usr = usr, pwd = pwd, workflow_title = "blah", product_file = "somefile"), 
-    regexp = "At least one of the parameters `app_title` or `app_pos` must be specified"
+    regexp = "Either the Title of the App \\(`app_title`\\) or its position in the Workflow \\(`app_pos`\\) must be specified."
   )
   
   expect_error(

@@ -48,15 +48,22 @@ rFunction = function(data = NULL,
   
   # input validation -----------------------------------------------------------
   if(!is.null(data)) assertthat::assert_that(mt_is_move2(data))
+  
+  # This following chunk is automatically checked over in the App Settings GUI. Here for
+  # local purposes only
   assertthat::assert_that(assertthat::is.string(usr))
   assertthat::assert_that(assertthat::is.string(pwd))
   assertthat::assert_that(assertthat::is.string(workflow_title))
-  if(!is.null(app_title)) assertthat::assert_that(assertthat::is.string(app_title))
-  if(!is.null(app_pos)) assertthat::assert_that(is.numeric(app_pos))
+  if(not_null(app_title)) assertthat::assert_that( assertthat::is.string(app_title)) 
+  if(not_null(app_pos)) assertthat::assert_that(is.numeric(app_pos))
   assertthat::assert_that(assertthat::is.string(product_file))
   
+  
   if(is.null(app_title) & is.null(app_pos)){
-    stop("At least one of the parameters `app_title` or `app_pos` must be specified", call. = FALSE)
+    stop(
+      paste0("Either the Title of the App (`app_title`) or its position in the ", 
+             "Workflow (`app_pos`) must be specified."), 
+      call. = FALSE)
   }
   
   
@@ -119,7 +126,7 @@ rFunction = function(data = NULL,
     if(nrow(app_products) == 0){
       rlang::abort(message = c(
         paste0("There is no App available in position #", app_pos, " of Workflow '", 
-               workflow_title, "'"),
+               workflow_title, "'."),
         "i" = "Please check the target Workflow page to get a valid App position number."),
         call = NULL
       )
@@ -137,7 +144,7 @@ rFunction = function(data = NULL,
     if(nrow(app_products) == 0){
       rlang::abort(message = c(
         paste0("There is no App with name matching '", app_title, "' in position #", 
-               app_pos, " of Workflow '", workflow_title, "'"),
+               app_pos, " of Workflow '", workflow_title, "'."),
         "i" = "Make sure parameters `app_title` and `app_pos` point coherently to the target App."
       ),
       call = NULL
@@ -152,10 +159,10 @@ rFunction = function(data = NULL,
     if(nrow(app_products) == 0){
       rlang::abort(message = c(
         paste0("There is no App with name matching '", app_title, "' in Workflow '", 
-               workflow_title, "'"),
+               workflow_title, "'."),
         "i" = paste0("Please check the Workflow page and make sure the",
                      " title of the target App is spelled accurately in",
-                     " parameter `app_title` (case-sensitive)")
+                     " parameter `app_title` (case-sensitive).")
       ),
       call = NULL
       )
@@ -165,10 +172,10 @@ rFunction = function(data = NULL,
     # Assumes Products in any given App have unique filenames
     if(any(duplicated(app_products$fileName))){
       rlang::abort(message = c(
-        "Unable to unambiguously identify the specified target App",
+        "Unable to unambiguously identify the specified target App.",
         "x" = paste0("There is more than one copy of App '", app_title, 
-                     "' in the target Workflow '", workflow_title, "'"),
-        "i" = "Please provide the target App position in parameter `app_pos`"
+                     "' in the target Workflow '", workflow_title, "'."),
+        "i" = "Please provide the target App position (`app_pos`)."
       ),
       call = NULL
       )
@@ -187,10 +194,10 @@ rFunction = function(data = NULL,
   if(nrow(prod_meta) == 0){
     rlang::abort(message = c(
       paste0("There is no Product named '", product_file, "' in App '", 
-             app_title, "' in Workflow '", workflow_title, "'"),
+             app_title, "' in Workflow '", workflow_title, "'."),
       "i" = paste0("Make sure the target product is an output of the specified",
-                   " App and its filename is defined correctly in `product_file`",
-                   " (case-sensitive)")), 
+                   " App and its filename is defined correctly (parameter `product_file`",
+                   " (case-sensitive).")), 
       call = NULL)
   }
   
@@ -202,11 +209,11 @@ rFunction = function(data = NULL,
     if(product_file_ext == ""){
 
       rlang::abort(message = c(
-        "Unable to unambiguously identify the target Product",
+        "Unable to unambiguously identify the target Product.",
         "x" = paste0("Found more than one Product with basename '", product_file,
-               "' in App '", app_title, "' in Workflow '", workflow_title, "'"),
+               "' in App '", app_title, "' in Workflow '", workflow_title, "'."),
         "i" = paste0("Please include the file extension when specifying the",
-        " filename of the target Product (parameter `product_file`)")),
+        " filename of the target Product (parameter `product_file`).")),
         call = NULL)
 
     } else{
