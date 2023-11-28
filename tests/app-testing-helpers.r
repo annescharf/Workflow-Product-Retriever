@@ -66,6 +66,7 @@ run_sdk <- function(data, usr, pwd,
                     product_file){
   
   require(jsonlite)
+  is.numeric(data) # just a trick to force error when object passed on to data doesn't exists
   
   # get environmental variables specified in .env
   dotenv::load_dot_env(".env")
