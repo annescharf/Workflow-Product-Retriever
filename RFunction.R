@@ -40,6 +40,12 @@ rFunction = function(data = NULL,
                      app_pos = NULL, 
                      product_file){
   
+  # input processing -----------------------------------------------------------
+  # Required step to deal with current MoveApps behaviour of converting NULL
+  # defaults for integer inputs, as specified in appspec.json, to 0s in the App
+  # Settings GUI
+  if(not_null(app_pos) && app_pos == 0) app_pos <- NULL
+  
   # input validation -----------------------------------------------------------
   if(!is.null(data)) assertthat::assert_that(mt_is_move2(data))
   assertthat::assert_that(assertthat::is.string(usr))
