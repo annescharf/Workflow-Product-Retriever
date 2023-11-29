@@ -85,7 +85,7 @@ test_that("App provides useful feedback when user specifies targets incorrrectly
     rFunction(
       data = test_data, usr = usr, pwd = pwd, workflow_title = "MOCK",
       app_title = "WRONG APP NAME", product_file = "app-output"),
-    regexp = "There is no App with name matching 'WRONG APP NAME' in Workflow 'MOCK'"
+    regexp = "There is no App with name matching 'WRONG APP NAME' in Workflow 'MOCK: Workflow Instance 001'"
   )
   
   # wrong App name and/or position
@@ -93,7 +93,7 @@ test_that("App provides useful feedback when user specifies targets incorrrectly
     rFunction(
       data = test_data, usr = usr, pwd = pwd, workflow_title = "MOCK",
       app_title = "WRONG APP NAME", app_pos = 2, product_file = "app-output"),
-    regexp = "There is no App with name matching 'WRONG APP NAME' in position #2 of Workflow 'MOCK'"
+    regexp = "There is no App with name matching 'WRONG APP NAME' in position #2 of Workflow 'MOCK: Workflow Instance 001'"
   )
   
   # wrong App position
@@ -101,7 +101,7 @@ test_that("App provides useful feedback when user specifies targets incorrrectly
     rFunction(
       data = test_data, usr = usr, pwd = pwd, workflow_title = "MOCK",
       app_pos = 20, product_file = "app-output"),
-    regexp = "There is no App available in position #20 of Workflow 'MOCK'"
+    regexp = "There is no App available in position #20 of Workflow 'MOCK: Workflow Instance 001'"
   )
    
   # wrong Product filename
@@ -109,7 +109,7 @@ test_that("App provides useful feedback when user specifies targets incorrrectly
     rFunction(
       data = test_data, usr = usr, pwd = pwd, workflow_title = "MOCK",
       app_pos = 2, product_file = "WRONG_PRODUCT_FILENAME"),
-    regexp = "There is no Product named 'WRONG_PRODUCT_FILENAME' in App 'Add Local and Solar Time' in Workflow 'MOCK'"
+    regexp = "There is no Product named 'WRONG_PRODUCT_FILENAME' in App 'Add Local and Solar Time' in Workflow 'MOCK: Workflow Instance 001'"
   )
   
   # Multiple copies of App in workflow
@@ -216,7 +216,7 @@ test_that("right condition class and informative message issued for invalid usr 
   
   expect_error(
     get_workflow_products(usr = "wrong", pwd = "credentials"), 
-    regexp = "API request error due to invalid `usr` and/or `pwd`",
+    regexp = "API request error: Failed to retrieve Workflow details due to invalid Workflow API ID",
     class = "httr2_http_401"
   )
   

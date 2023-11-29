@@ -57,7 +57,26 @@ output <- rFunction(
 attr(output, "appended_products")
 
 
+output <- rFunction(
+  data = NULL, 
+  usr = usr, 
+  pwd = pwd, 
+  workflow_title = "mock",
+  app_pos = 8, 
+  product_file = "app-tput")
 
+
+
+
+# output <- rFunction(
+#   data = test_inputs$input2, 
+#   usr = usr, 
+#   pwd = pwd, 
+#   workflow_title = "mock",
+#   app_title = "Write Raster",
+#   product_file = "data_raster.grd")
+# 
+# attr(output, "appended_products")
 
 
 # ---------------------------------------- #
@@ -145,7 +164,6 @@ appended_prods[[2]]$object
 
 
 
-# Incorrectly specified parameters
 # ------- Incorrectly specified parameters
 run_sdk(
   data = test_inputs$input3,

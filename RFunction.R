@@ -49,8 +49,6 @@ rFunction = function(data = NULL,
   # input validation -----------------------------------------------------------
   if(!is.null(data)) assertthat::assert_that(mt_is_move2(data))
   
-  # This following chunk is automatically checked over in the App Settings GUI. Here for
-  # local purposes only
   assertthat::assert_that(assertthat::is.string(usr))
   assertthat::assert_that(usr != "", msg = "Input for Workflow ID (`usr`) is missing.")
   assertthat::assert_that(!grepl("\\s", usr), msg = "Invalid Workflow ID (`usr`): string must not contain any whitespace.")
@@ -63,7 +61,6 @@ rFunction = function(data = NULL,
   # app_title and app_pos are interchangeable so null input is acceptable 
   if(not_null(app_title)) assertthat::assert_that( assertthat::is.string(app_title)) 
   if(not_null(app_pos)) assertthat::assert_that(is.numeric(app_pos))
-  assertthat::assert_that(assertthat::is.string(product_file))
   
   
   if(is.null(app_title) & is.null(app_pos)){
@@ -119,7 +116,8 @@ rFunction = function(data = NULL,
       file_ext = ifelse(file_basename == "output_file", "rds", fs::path_ext(fileName))
     )
 
-  
+  # generate workflow label for error messaging 
+  wflw_inst_label <- paste0("'", workflow_title, ": ", wf_products$instance_title[1], "'")
   
   # List products' metadata in target app  -------------------------------------
   logger.info("Listing Products metadata in target App")
@@ -132,15 +130,15 @@ rFunction = function(data = NULL,
     # non-existent/invalid user-specified App position
     if(nrow(app_products) == 0){
       rlang::abort(message = c(
-        paste0("There is no App available in position #", app_pos, " of Workflow '", 
-               workflow_title, "'."),
+        paste0("There is no App available in position #", app_pos, " of Workflow ", 
+               wflw_inst_label, "."),
         "i" = "Please check the target Workflow page to get a valid App position number."),
         call = NULL
       )
     }
     
     # set app title as stated in the API
-    app_title <- app_products$appTitle
+    app_title <- app_products$appTitle[1]
     
   }else if(not_null(app_pos) & not_null(app_title)){
     
@@ -151,7 +149,7 @@ rFunction = function(data = NULL,
     if(nrow(app_products) == 0){
       rlang::abort(message = c(
         paste0("There is no App with name matching '", app_title, "' in position #", 
-               app_pos, " of Workflow '", workflow_title, "'."),
+               app_pos, " of Workflow ", wflw_inst_label, "."),
         "i" = "Make sure parameters `app_title` and `app_pos` point coherently to the target App."
       ),
       call = NULL
@@ -165,8 +163,8 @@ rFunction = function(data = NULL,
     # non-existent/invalid user-specified App title
     if(nrow(app_products) == 0){
       rlang::abort(message = c(
-        paste0("There is no App with name matching '", app_title, "' in Workflow '", 
-               workflow_title, "'."),
+        paste0("There is no App with name matching '", app_title, "' in Workflow ", 
+               wflw_inst_label, "."),
         "i" = paste0("Please check the Workflow page and make sure the",
                      " title of the target App is spelled accurately in",
                      " parameter `app_title` (case-sensitive).")
@@ -181,7 +179,7 @@ rFunction = function(data = NULL,
       rlang::abort(message = c(
         "Unable to unambiguously identify the specified target App.",
         "x" = paste0("There is more than one copy of App '", app_title, 
-                     "' in the target Workflow '", workflow_title, "'."),
+                     "' in the target Workflow ", wflw_inst_label, "."),
         "i" = "Please provide the target App position (`app_pos`)."
       ),
       call = NULL
@@ -201,10 +199,10 @@ rFunction = function(data = NULL,
   if(nrow(prod_meta) == 0){
     rlang::abort(message = c(
       paste0("There is no Product named '", product_file, "' in App '", 
-             app_title, "' in Workflow '", workflow_title, "'."),
+             app_title, "' in Workflow ", wflw_inst_label, "."),
       "i" = paste0("Make sure the target product is an output of the specified",
-                   " App and its filename is defined correctly (parameter `product_file`",
-                   " (case-sensitive).")), 
+                   " App and its filename is correctly defined (parameter `product_file`;",
+                   " case-sensitive).")), 
       call = NULL)
   }
   
@@ -218,7 +216,7 @@ rFunction = function(data = NULL,
       rlang::abort(message = c(
         "Unable to unambiguously identify the target Product.",
         "x" = paste0("Found more than one Product with basename '", product_file,
-               "' in App '", app_title, "' in Workflow '", workflow_title, "'."),
+               "' in App '", app_title, "' in Workflow ", wflw_inst_label, "."),
         "i" = paste0("Please include the file extension when specifying the",
         " filename of the target Product (parameter `product_file`).")),
         call = NULL)
@@ -317,7 +315,9 @@ get_workflow_products <- function(usr, pwd){
     wf_prods_req |> httr2::req_perform() |> httr2::resp_body_json(),
     httr2_http_401 = function(cnd){
       rlang::abort(
-        message = "HTTP 401 Unauthorized: API request error due to invalid `usr` and/or `pwd`",
+        message = paste0(
+          "API request error: Failed to retrieve Workflow details due to invalid ",
+          "Workflow API ID (`usr`) and/or API Password (`pwd`)"),
         parent = NA,
         error = cnd, 
         class = "httr2_http_401"
