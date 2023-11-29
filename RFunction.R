@@ -39,7 +39,13 @@ rFunction = function(data = NULL,
                      app_title = NULL,
                      app_pos = NULL, 
                      product_file){
-
+  
+  # input processing -----------------------------------------------------------
+  # Required step to deal with current MoveApps behaviour of converting NULL
+  # defaults for string inputs, as specified in appspec.json, to "" in the App
+  # Settings GUI. NULL is a valid and determining input for app_title
+  if(not_null(app_title) && app_title == "") app_title <- NULL
+  
   # input validation -----------------------------------------------------------
   if(!is.null(data)) assertthat::assert_that(mt_is_move2(data))
   
