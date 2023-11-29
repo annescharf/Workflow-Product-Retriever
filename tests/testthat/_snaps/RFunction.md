@@ -15,7 +15,7 @@
       [1] 0
       
       $results[[1]]$appTitle
-      [1] "Movebank"
+      [1] "Movebank move1"
       
       $results[[1]]$fileName
       [1] "output_file"

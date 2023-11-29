@@ -23,6 +23,32 @@ test_that("App input validation does its job", {
   )
   
   expect_error(
+    rFunction(data = test_data, usr = ""), 
+    regexp = "Input for Workflow ID \\(`usr`\\) is missing."
+  )
+  
+  
+  expect_error(
+    rFunction(data = test_data, usr = "WHITESPACE IN USR"), 
+    regexp = "Invalid Workflow ID \\(`usr`\\): string must not contain any whitespace."
+  )
+  
+  expect_error(
+    rFunction(data = test_data, usr = usr, pwd = ""), 
+    regexp = "Input for Workflow password \\(`pwd`\\) is missing."
+  )
+  
+  expect_error(
+    rFunction(data = test_data, usr = usr, pwd = pwd, workflow_title = ""), 
+    regexp = "Input for Workflow title \\(`workflow_title`\\) is missing."
+  )
+  
+  expect_error(
+    rFunction(data = test_data, usr = usr, pwd = pwd, workflow_title = "ffd", product_file = ""), 
+    regexp = "Input for Product filename \\(`product_file`\\) is missing."
+  )
+  
+  expect_error(
     rFunction(data = test_data, usr = usr, pwd = pwd, workflow_title = "blah"), 
     regexp = "\"product_file\" is missing"
   )

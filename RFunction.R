@@ -52,8 +52,15 @@ rFunction = function(data = NULL,
   # This following chunk is automatically checked over in the App Settings GUI. Here for
   # local purposes only
   assertthat::assert_that(assertthat::is.string(usr))
+  assertthat::assert_that(usr != "", msg = "Input for Workflow ID (`usr`) is missing.")
+  assertthat::assert_that(!grepl("\\s", usr), msg = "Invalid Workflow ID (`usr`): string must not contain any whitespace.")
   assertthat::assert_that(assertthat::is.string(pwd))
+  assertthat::assert_that(pwd != "", msg = "Input for Workflow password (`pwd`) is missing.")
   assertthat::assert_that(assertthat::is.string(workflow_title))
+  assertthat::assert_that(workflow_title != "", msg = "Input for Workflow title (`workflow_title`) is missing.")
+  assertthat::assert_that(assertthat::is.string(product_file))
+  assertthat::assert_that(product_file != "", msg = "Input for Product filename (`product_file`) is missing.")
+  # app_title and app_pos are interchangeable so null input is acceptable 
   if(not_null(app_title)) assertthat::assert_that( assertthat::is.string(app_title)) 
   if(not_null(app_pos)) assertthat::assert_that(is.numeric(app_pos))
   assertthat::assert_that(assertthat::is.string(product_file))

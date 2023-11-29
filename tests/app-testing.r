@@ -106,7 +106,7 @@ appended_prods[[1]]$object$Bateleur_8889 |> class()
 
 
 
-# Simulating applying the App sequentially to append two products 
+# ----- Simulating applying the App sequentially to append two products 
 
 # 1st App
 run_sdk(
@@ -146,6 +146,7 @@ appended_prods[[2]]$object
 
 
 # Incorrectly specified parameters
+# ------- Incorrectly specified parameters
 run_sdk(
   data = test_inputs$input3,
   usr = usr, 
@@ -160,7 +161,7 @@ run_sdk(
   usr = usr, 
   pwd = pwd, 
   workflow_title = "mock",
-  app_pos = 3, 
+  app_pos = 5, 
   product_file = "wrong filename.csv"
 )
 
@@ -192,3 +193,44 @@ run_sdk(
   app_title = "Write Raster",
   product_file = "data_raster"
 )
+
+
+run_sdk(
+  data = test_inputs$input3,
+  usr = "WRONG-USER", 
+  pwd = pwd, 
+  workflow_title = "mock",
+  app_title = "Fit a Continuous-Time Movement Mod", 
+  product_file = "model_summary.txt"
+)
+
+run_sdk(
+  data = test_inputs$input3,
+  usr = usr,
+  pwd = "WRONG-PASS", 
+  workflow_title = "mock",
+  app_title = "Fit a Continuous-Time Movement Mod", 
+  product_file = "model_summary.txt"
+)
+
+run_sdk(
+  data = test_inputs$input3,
+  usr = "", 
+  pwd = pwd, 
+  workflow_title = "mock",
+  app_title = "Fit a Continuous-Time Movement Mod", 
+  product_file = "model_summary.txt"
+)
+
+
+run_sdk(
+  data = test_inputs$input3,
+  usr = "STRING WITH WHITESPACE", 
+  pwd = pwd, 
+  workflow_title = "mock",
+  app_title = "Fit a Continuous-Time Movement Mod", 
+  product_file = "model_summary.txt"
+)
+
+
+
