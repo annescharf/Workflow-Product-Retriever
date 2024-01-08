@@ -128,8 +128,8 @@ correct identification of the target Product for retrieval, the App will
 generate informative error messages pointing to where the misspecification
 occurred. The most common misspecifications include:
 
-  - inaccurate naming of target App and/or Product names, 
-  - absence of intended target Products in specified target App, 
+  - inaccurate naming of target App title and/or Product filename, 
+  - non-existence of intended target Product in specified App, 
   - inconsistency between the specified name of the target App and the specified 
   position of that App in the target Workflow
 
@@ -146,10 +146,10 @@ the code will become susceptible to errors in HTTP requests.
 Parameters `usr`, `pwd` and `product_file` must be specified, whereas at least
 one of `app_title` and `app_pos` needs to be provided.
 
-The `workflow_title` parameter is optional since Workflow identification is
-already provided by `usr`. However, we strongly recommend specifying an clear and
-identifiable name for the target Workflow to ensure clarity when using appended
-Products in downstream Apps.
+The `workflow_title` parameter is optional since Workflow instance
+identification is already provided by `usr`. However, we strongly recommend
+specifying a clear and identifiable name for the target Workflow to ensure
+clarity when referring to appended Products in downstream Apps.
 
 
 ### Accessing appended Products
