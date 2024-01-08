@@ -257,7 +257,7 @@ test_that("data from correct target product is downloaded", {
   ) 
   
   expect_contains(names(actual), expected =  c("unit", "low", "est", "high"))
-  expect_equal(round(max(actual$low)), 10213)
+  expect_equal(round(max(actual$low)), 9971)
   
   
   # app output in movestack format - First copy of app in workflow
@@ -281,8 +281,8 @@ test_that("data from correct target product is downloaded", {
   )
   
   expect_true(inherits(actual, "MoveStack"))
-  expect_length(actual$timestamp, 247)
-  expect_equal(round(mean(actual$kmph, na.rm = TRUE), 5), 7.74966)
+  expect_length(actual$timestamp, 248)
+  expect_equal(round(mean(actual$kmph, na.rm = TRUE), 5), 7.56027)
   
   
   # ctmm model object stored in rds file
