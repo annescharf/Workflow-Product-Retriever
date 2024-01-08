@@ -8,18 +8,19 @@ library("fs")
 library("readr")
 library("purrr")
 library("move") # "indirect" dependency: required to open/read appended objects in movestack format
-#library("ctmm")
 
+# NOTE 1: For App testing purposes, use the more complete script in
+# "~/tests/app-testing.r" (instead of 'sdk.r')
 
-# NOTE 1: HTTP requests to the MoveApps API built below based on the example code provided in
+# NOTE 2: HTTP requests to the MoveApps API built below based on the example code provided in
 # <https://github.com/movestore/movestore.github.io/blob/master/web-partner-api/example.html>.
 
-# NOTE 2: Code relies on the current the structure and attribute names of MoveApps's
+# NOTE 3: Code relies on the current the structure and attribute names of MoveApps's
 # API. If some of its naming conventions change in the future, the code will most likely
 # be exposed to errors in HTTP requests.
 #
-# NOTE 3: Currently only supporting products stored as csv, txt or rds files
-#
+# NOTE 4: Currently only supporting products stored as csv, txt or rds files
+# 
 #
 # TODO: Expand support for Products comprising raster data and shapefiles
 
