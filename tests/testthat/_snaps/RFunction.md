@@ -15,13 +15,13 @@
       [1] 0
       
       $results[[1]]$appTitle
-      [1] "Movebank move1"
+      [1] "Movebank Location move1"
       
       $results[[1]]$fileName
-      [1] "output_file"
+      [1] "app-output.rds"
       
       $results[[1]]$mimeType
-      [1] "application/gzip"
+      [1] "application/r-rds"
       
       $results[[1]]$fileSize
       [1] 19493
@@ -31,7 +31,7 @@
       
       $results[[1]]$links
       $results[[1]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/0/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/0/results/app-output.rds"
       
       
       
@@ -43,20 +43,20 @@
       [1] "Add Local and Solar Time"
       
       $results[[2]]$fileName
-      [1] "data_wtime.csv"
+      [1] "app-output.rds"
       
       $results[[2]]$mimeType
-      [1] "text/plain"
+      [1] "application/r-rds"
       
       $results[[2]]$fileSize
-      [1] 172252
+      [1] 22875
       
       $results[[2]]$modifiedAt
-      [1] "2023-11-01T15:46:49.336246Z"
+      [1] "2023-11-01T15:46:49.083018Z"
       
       $results[[2]]$links
       $results[[2]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/1/results/data_wtime.csv"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/1/results/app-output.rds"
       
       
       
@@ -68,20 +68,20 @@
       [1] "Add Local and Solar Time"
       
       $results[[3]]$fileName
-      [1] "output_file"
+      [1] "data_wtime.csv"
       
       $results[[3]]$mimeType
-      [1] "application/gzip"
+      [1] "text/plain"
       
       $results[[3]]$fileSize
-      [1] 22875
+      [1] 172252
       
       $results[[3]]$modifiedAt
-      [1] "2023-11-01T15:46:49.083018Z"
+      [1] "2023-11-01T15:46:49.336246Z"
       
       $results[[3]]$links
       $results[[3]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/1/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/1/results/data_wtime.csv"
       
       
       
@@ -93,10 +93,10 @@
       [1] "Interactive Density Map"
       
       $results[[4]]$fileName
-      [1] "output_file"
+      [1] "app-output.rds"
       
       $results[[4]]$mimeType
-      [1] "application/gzip"
+      [1] "application/r-rds"
       
       $results[[4]]$fileSize
       [1] 22874
@@ -106,7 +106,7 @@
       
       $results[[4]]$links
       $results[[4]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/2/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/2/results/app-output.rds"
       
       
       
@@ -118,10 +118,10 @@
       [1] "Adapt/Filter Unrealistic Values"
       
       $results[[5]]$fileName
-      [1] "output_file"
+      [1] "app-output.rds"
       
       $results[[5]]$mimeType
-      [1] "application/gzip"
+      [1] "application/r-rds"
       
       $results[[5]]$fileSize
       [1] 22390
@@ -131,7 +131,7 @@
       
       $results[[5]]$links
       $results[[5]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/3/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/3/results/app-output.rds"
       
       
       
@@ -143,20 +143,20 @@
       [1] "Write Shapefile"
       
       $results[[6]]$fileName
-      [1] "data_shps.zip"
+      [1] "app-output.rds"
       
       $results[[6]]$mimeType
-      [1] "application/zip"
+      [1] "application/r-rds"
       
       $results[[6]]$fileSize
-      [1] 33244
+      [1] 22389
       
       $results[[6]]$modifiedAt
-      [1] "2023-11-01T15:53:18.196879Z"
+      [1] "2023-11-01T15:53:17.945469Z"
       
       $results[[6]]$links
       $results[[6]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/4/results/data_shps.zip"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/4/results/app-output.rds"
       
       
       
@@ -168,20 +168,20 @@
       [1] "Write Shapefile"
       
       $results[[7]]$fileName
-      [1] "output_file"
+      [1] "data_shps.zip"
       
       $results[[7]]$mimeType
-      [1] "application/gzip"
+      [1] "application/zip"
       
       $results[[7]]$fileSize
-      [1] 22389
+      [1] 33244
       
       $results[[7]]$modifiedAt
-      [1] "2023-11-01T15:53:17.945469Z"
+      [1] "2023-11-01T15:53:18.196879Z"
       
       $results[[7]]$links
       $results[[7]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/4/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/4/results/data_shps.zip"
       
       
       
@@ -193,20 +193,20 @@
       [1] "Write Raster"
       
       $results[[8]]$fileName
-      [1] "data_raster.grd"
+      [1] "app-output.rds"
       
       $results[[8]]$mimeType
-      [1] "text/plain"
+      [1] "application/r-rds"
       
       $results[[8]]$fileSize
-      [1] 468
+      [1] 22390
       
       $results[[8]]$modifiedAt
-      [1] "2023-11-01T15:57:10.580538Z"
+      [1] "2023-11-01T15:57:09.934264Z"
       
       $results[[8]]$links
       $results[[8]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/5/results/data_raster.grd"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/5/results/app-output.rds"
       
       
       
@@ -218,20 +218,20 @@
       [1] "Write Raster"
       
       $results[[9]]$fileName
-      [1] "data_raster.gri"
+      [1] "data_raster.grd"
       
       $results[[9]]$mimeType
-      [1] "application/octet-stream"
+      [1] "text/plain"
       
       $results[[9]]$fileSize
-      [1] 4031508
+      [1] 468
       
       $results[[9]]$modifiedAt
-      [1] "2023-11-01T15:57:10.379773Z"
+      [1] "2023-11-01T15:57:10.580538Z"
       
       $results[[9]]$links
       $results[[9]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/5/results/data_raster.gri"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/5/results/data_raster.grd"
       
       
       
@@ -243,20 +243,20 @@
       [1] "Write Raster"
       
       $results[[10]]$fileName
-      [1] "output_file"
+      [1] "data_raster.gri"
       
       $results[[10]]$mimeType
-      [1] "application/gzip"
+      [1] "application/octet-stream"
       
       $results[[10]]$fileSize
-      [1] 22390
+      [1] 4031508
       
       $results[[10]]$modifiedAt
-      [1] "2023-11-01T15:57:09.934264Z"
+      [1] "2023-11-01T15:57:10.379773Z"
       
       $results[[10]]$links
       $results[[10]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/5/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/5/results/data_raster.gri"
       
       
       
@@ -268,10 +268,10 @@
       [1] "moveStack to move2_loc"
       
       $results[[11]]$fileName
-      [1] "output_file"
+      [1] "app-output.rds"
       
       $results[[11]]$mimeType
-      [1] "application/gzip"
+      [1] "application/r-rds"
       
       $results[[11]]$fileSize
       [1] 21614
@@ -281,7 +281,7 @@
       
       $results[[11]]$links
       $results[[11]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/6/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/6/results/app-output.rds"
       
       
       
@@ -293,20 +293,20 @@
       [1] "Standardise Formats and Calculate Basic Statistics"
       
       $results[[12]]$fileName
-      [1] "distances.png"
+      [1] "app-output.rds"
       
       $results[[12]]$mimeType
-      [1] "image/png"
+      [1] "application/r-rds"
       
       $results[[12]]$fileSize
-      [1] 19406
+      [1] 22308
       
       $results[[12]]$modifiedAt
-      [1] "2023-11-01T15:57:33.294908Z"
+      [1] "2023-11-01T15:57:32.689580Z"
       
       $results[[12]]$links
       $results[[12]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/7/results/distances.png"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/7/results/app-output.rds"
       
       
       
@@ -318,20 +318,20 @@
       [1] "Standardise Formats and Calculate Basic Statistics"
       
       $results[[13]]$fileName
-      [1] "output_file"
+      [1] "distances.png"
       
       $results[[13]]$mimeType
-      [1] "application/gzip"
+      [1] "image/png"
       
       $results[[13]]$fileSize
-      [1] 22308
+      [1] 19406
       
       $results[[13]]$modifiedAt
-      [1] "2023-11-01T15:57:32.689580Z"
+      [1] "2023-11-01T15:57:33.294908Z"
       
       $results[[13]]$links
       $results[[13]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/7/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/7/results/distances.png"
       
       
       
@@ -418,10 +418,10 @@
       [1] "move2_loc to moveStack"
       
       $results[[17]]$fileName
-      [1] "output_file"
+      [1] "app-output.rds"
       
       $results[[17]]$mimeType
-      [1] "application/gzip"
+      [1] "application/r-rds"
       
       $results[[17]]$fileSize
       [1] 21473
@@ -431,7 +431,7 @@
       
       $results[[17]]$links
       $results[[17]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/8/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/8/results/app-output.rds"
       
       
       
@@ -443,10 +443,10 @@
       [1] "Adapt/Filter Unrealistic Values"
       
       $results[[18]]$fileName
-      [1] "output_file"
+      [1] "app-output.rds"
       
       $results[[18]]$mimeType
-      [1] "application/gzip"
+      [1] "application/r-rds"
       
       $results[[18]]$fileSize
       [1] 20460
@@ -456,7 +456,7 @@
       
       $results[[18]]$links
       $results[[18]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/9/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/9/results/app-output.rds"
       
       
       
@@ -468,10 +468,10 @@
       [1] "MoveStack to Telemtry.list"
       
       $results[[19]]$fileName
-      [1] "output_file"
+      [1] "app-output.rds"
       
       $results[[19]]$mimeType
-      [1] "application/gzip"
+      [1] "application/r-rds"
       
       $results[[19]]$fileSize
       [1] 22043
@@ -481,7 +481,7 @@
       
       $results[[19]]$links
       $results[[19]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/10/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/10/results/app-output.rds"
       
       
       
@@ -493,20 +493,20 @@
       [1] "Fit a Continuous-Time Movement Model (ctmm)"
       
       $results[[20]]$fileName
-      [1] "ctmm_select_summary.txt"
+      [1] "app-output.rds"
       
       $results[[20]]$mimeType
-      [1] "text/plain"
+      [1] "application/gzip"
       
       $results[[20]]$fileSize
-      [1] 1000
+      [1] 23993
       
       $results[[20]]$modifiedAt
-      [1] "2023-11-01T16:21:20.892959Z"
+      [1] "2023-11-01T16:21:20.412177Z"
       
       $results[[20]]$links
       $results[[20]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/11/results/ctmm_select_summary.txt"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/11/results/app-output.rds"
       
       
       
@@ -518,20 +518,20 @@
       [1] "Fit a Continuous-Time Movement Model (ctmm)"
       
       $results[[21]]$fileName
-      [1] "model.rds"
+      [1] "ctmm_select_summary.txt"
       
       $results[[21]]$mimeType
-      [1] "application/gzip"
+      [1] "text/plain"
       
       $results[[21]]$fileSize
-      [1] 2082
+      [1] 1000
       
       $results[[21]]$modifiedAt
-      [1] "2023-11-01T16:21:21.045140Z"
+      [1] "2023-11-01T16:21:20.892959Z"
       
       $results[[21]]$links
       $results[[21]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/11/results/model.rds"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/11/results/ctmm_select_summary.txt"
       
       
       
@@ -543,20 +543,20 @@
       [1] "Fit a Continuous-Time Movement Model (ctmm)"
       
       $results[[22]]$fileName
-      [1] "model_summary.txt"
+      [1] "model.rds"
       
       $results[[22]]$mimeType
-      [1] "text/plain"
+      [1] "application/gzip"
       
       $results[[22]]$fileSize
-      [1] 180
+      [1] 2082
       
       $results[[22]]$modifiedAt
-      [1] "2023-11-01T16:21:20.979101Z"
+      [1] "2023-11-01T16:21:21.045140Z"
       
       $results[[22]]$links
       $results[[22]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/11/results/model_summary.txt"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/11/results/model.rds"
       
       
       
@@ -568,20 +568,20 @@
       [1] "Fit a Continuous-Time Movement Model (ctmm)"
       
       $results[[23]]$fileName
-      [1] "output_file"
+      [1] "model_summary.txt"
       
       $results[[23]]$mimeType
-      [1] "application/gzip"
+      [1] "text/plain"
       
       $results[[23]]$fileSize
-      [1] 23993
+      [1] 180
       
       $results[[23]]$modifiedAt
-      [1] "2023-11-01T16:21:20.412177Z"
+      [1] "2023-11-01T16:21:20.979101Z"
       
       $results[[23]]$links
       $results[[23]]$links$self
-      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/11/results/output_file"
+      [1] "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/11/results/model_summary.txt"
       
       
       

@@ -20,14 +20,6 @@ library("move") # "indirect" dependency: required to open/read appended objects 
 #
 # NOTE 3: Currently only supporting products stored as csv, txt or rds files
 #
-# NOTE 4: file extension of the 'output_file' generated in Apps is not currently
-# provided by the API, so here we assumed it's always stored as an rds file.
-#
-# Note 5: there is an inconsistency between the name of the output file in the
-# MoveApps GUI ('app-output.rds') and that in the API ('output_file'). Currently
-# hard-coding the renaming of "app-output" as "output_file", but this is
-# unguarded to potential/eventual harmonizing between API and GUI in the naming
-# of App output files
 #
 # TODO: Expand support for Products comprising raster data and shapefiles
 
@@ -51,7 +43,7 @@ rFunction = function(data = NULL,
   
   assertthat::assert_that(assertthat::is.string(usr))
   assertthat::assert_that(usr != "", msg = "Input for Workflow ID (`usr`) is missing.")
-  assertthat::assert_that(!grepl("\\s", usr), msg = "Invalid Workflow ID (`usr`): string must not contain any whitespace.")
+  assertthat::assert_that(!grepl("\\s", usr), msg = "Invalid Workflow ID (`usr`): string must not contain any whitespaces.")
   assertthat::assert_that(assertthat::is.string(pwd))
   assertthat::assert_that(pwd != "", msg = "Input for Workflow password (`pwd`) is missing.")
   assertthat::assert_that(assertthat::is.string(workflow_title))
@@ -81,13 +73,7 @@ rFunction = function(data = NULL,
       filter_track_data(.track_id = "b") # make it empty
   }
   
-  # Deal with inconsistency in naming of App output files between what is shown
-  # in the App Outputs panel in MoveApps and what is returned in the API
-  # response 
-  if(grepl("app-output", x = product_file)){
-    product_file <- "output_file.rds"
-  }
-  
+
   # Get basename and extension of target file
   product_file_base <- fs::path_ext_remove(product_file)
   product_file_ext <- fs::path_ext(product_file)
@@ -109,11 +95,10 @@ rFunction = function(data = NULL,
     ) |> 
     # split basename and extension
     dplyr::mutate(
-      # shift app positions one place as API counts them from zero :)
+      # shift app positions one place as API counts them from zero. Starting from 1 more user-friendly
       appPositionInWorkflow = appPositionInWorkflow + 1,
       file_basename = fs::path_ext_remove(fileName),
-      # api does not return file extension of output_file, so assuming it's ALWAYS rds
-      file_ext = ifelse(file_basename == "output_file", "rds", fs::path_ext(fileName))
+      file_ext = fs::path_ext(fileName)
     )
 
   # generate workflow label for error messaging 
@@ -359,6 +344,7 @@ get_product_object <- function(usr, pwd, product_link, file_ext){
   
   # Parse returned API response as an R object
   if(file_ext %in% c("csv", "txt")){
+    
     # convert data in body section to string and convert to tibble. 
     # read_delim() accepts literal data as input
     prod_obj <- prod_resp |> 
@@ -367,12 +353,18 @@ get_product_object <- function(usr, pwd, product_link, file_ext){
     
   }else if(file_ext == "rds"){
     
-    # get type of compression 
+    # attempt to retrieve compression type from content type
     compression <- strsplit(httr2::resp_content_type(prod_resp), split = "/")[[1]][2]
+
+    # set to "unknown" if unavailable from content type, i.e. leaving it to
+    # memDecompress() to detect type of compression
+    if(compression %notin% c("gzip", "bzip2", "xz")){
+      compression <- "unknown"
+    }
     
     prod_obj <- prod_resp |> 
       httr2::resp_body_raw() |> 
-      memDecompress(type = compression) |> 
+      memDecompress(type = compression) |>
       unserialize()
   }
   

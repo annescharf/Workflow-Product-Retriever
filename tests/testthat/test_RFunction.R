@@ -30,7 +30,7 @@ test_that("App input validation does its job", {
   
   expect_error(
     rFunction(data = test_data, usr = "WHITESPACE IN USR"), 
-    regexp = "Invalid Workflow ID \\(`usr`\\): string must not contain any whitespace."
+    regexp = "Invalid Workflow ID \\(`usr`\\): string must not contain any whitespaces."
   )
   
   expect_error(
@@ -241,7 +241,7 @@ test_that("data from correct target product is downloaded", {
   # app output move2 object stored in .rds
   actual <- get_product_object(
     usr = usr, pwd = pwd, 
-    product_link = "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/7/results/output_file",
+    product_link = "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/7/results/app-output.rds",
     file_ext = "rds"
   ) 
   
@@ -263,7 +263,7 @@ test_that("data from correct target product is downloaded", {
   # app output in movestack format - First copy of app in workflow
   actual <- get_product_object(
     usr = usr, pwd = pwd, 
-    product_link = "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/4/results/output_file",
+    product_link = "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/4/results/app-output.rds",
     file_ext = "rds"
   )
   
@@ -276,7 +276,7 @@ test_that("data from correct target product is downloaded", {
   # data being filtered out in upstream apps
   actual <- get_product_object(
     usr = usr, pwd = pwd, 
-    product_link = "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/9/results/output_file",
+    product_link = "https://www.moveapps.org/web-partner/v1/workflowInstances/08036056-76a4-4498-9482-0995e42db1f9/apps/9/results/app-output.rds",
     file_ext = "rds"
   )
   
