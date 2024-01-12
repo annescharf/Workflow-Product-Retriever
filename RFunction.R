@@ -7,6 +7,7 @@ library("openssl")
 library("fs")
 library("readr")
 library("purrr")
+library("sf")
 library("move") # "indirect" dependency: required to open/read appended objects in movestack format
 
 # NOTE 1: For App testing purposes, use the more complete script in
@@ -20,7 +21,6 @@ library("move") # "indirect" dependency: required to open/read appended objects 
 # be exposed to errors in HTTP requests.
 #
 # NOTE 4: Currently only supporting products stored as csv, txt or rds files
-# 
 #
 # TODO: Expand support for Products comprising raster data and shapefiles
 
@@ -31,7 +31,9 @@ rFunction = function(data = NULL,
                      workflow_title,
                      app_title = NULL,
                      app_pos = NULL, 
-                     product_file){
+                     product_file,
+                     track_combine = c("merge", "rename")
+                     ){
   
   # input processing -----------------------------------------------------------
   # Required step to deal with current MoveApps behaviour of converting NULL
@@ -41,6 +43,8 @@ rFunction = function(data = NULL,
   
   # input validation -----------------------------------------------------------
   if(!is.null(data)) assertthat::assert_that(mt_is_move2(data))
+  
+  track_combine <- rlang::arg_match(track_combine)
   
   assertthat::assert_that(assertthat::is.string(usr))
   assertthat::assert_that(usr != "", msg = "Input for Workflow ID (`usr`) is missing.")
@@ -66,16 +70,7 @@ rFunction = function(data = NULL,
   
   # input processing -----------------------------------------------------------
   
-  # generate empty move2 object to append retrieved objects to. This is to allow
-  # this App to be deployed as a MoveApps Workflow Starting App
-  if(is.null(data)){
-    data <- data.frame(timestamp = 1, track = "a", x = 0, y = 0) |> 
-      mt_as_move2("timestamp", "track", coords = c("x", "y")) |> 
-      filter_track_data(.track_id = "b") # make it empty
-  }
-  
-
-  # Get basename and extension of target file
+  # Get basename and extension of user-defined target file
   product_file_base <- fs::path_ext_remove(product_file)
   product_file_ext <- fs::path_ext(product_file)
   
@@ -193,7 +188,7 @@ rFunction = function(data = NULL,
   }
   
   
-  # Dealing multiple files in App with same basename, but different extensions
+  # Dealing with multiple files in App with same basename, but different extensions
   if(nrow(prod_meta) > 1){
 
     # If extension missing, throw error asking user to include it in filename
@@ -215,25 +210,99 @@ rFunction = function(data = NULL,
   
   
   
-  # Retrieve the target file  --------------------------------------------------
-  
   # NOTE: assumes files in a given app have unique filenames (i.e. basename + extension)
-  logger.info("Downloading and processing data in target Product")
+  logger.info("Downloading and processing object in target Product")
   
-  prod_object <- get_product_object(usr, pwd, prod_meta$self, prod_meta$file_ext)
+  prod_obj <- get_product_object(usr, pwd, prod_meta$self, prod_meta$file_ext)
 
   
   
-  # Attach fetched product data to input data ----------------------------------
-  logger.info("Appending target Product object to input dataset")
+  # Combining retrieved product with input data ----------------------------------
+  # 
+  # Stack-up product to input if and only if product is of type move2_loc. Otherwise
+  # product is annexed as an attribute of the input data
   
-  to_append <- list(
-    metadata = prod_meta |> dplyr::select(-self),
-    object = prod_object
-  )
+  logger.info("Combining retrieved product with input object")
   
-  # get current appended products (from upstream copy of 'Workflow-Products-Retriever'), if any
+  #' Get product currently appended to the input dataset (from upstream copy of 
+  #' 'Workflow-Products-Retriever'), if any
   appended_products <- attr(data, "appended_products")
+  
+  
+  if(is_move2_loc(prod_obj)){
+    
+    if(is.null(data)){
+      
+      # delete appended data in retrieved product, if any
+      attr(prod_obj, "appended_products") <- NULL
+      
+      # retrieved product becomes the "main data" 
+      data <- prod_obj
+      
+    }else{
+      
+      logger.info("Retrieved Product is a 'move2_loc' object, so it will be stacked to the input dataset")
+      
+      # homogenize CRS projections 
+      if (sf::st_crs(data) != sf::st_crs(prod_obj)){
+        
+        prod_obj <- sf::st_transform(prod_obj, sf::st_crs(data))
+        
+        logger.info(
+          paste0(
+            "Input and retrieved datasets are in different CRS projections. ",
+            "The retrieved dataset has been re-projected to produce a combined ",
+            "dataset with the '", sf::st_crs(data)$input,"' projection.")
+        )
+      }
+      
+      logger.info(
+        paste0("Product data stacked to the input data using the chosen '", 
+               track_combine, "' option.")
+      )
+      #' NOTE: any appended products in `data` and `prod_obj` are automatically 
+      #' dropped when used in `mt_stack()`
+      data <- mt_stack(data, prod_obj, .track_combine = track_combine)
+      
+      # remove duplicate timestamps within a track
+      if (!mt_has_unique_location_time_records(data)){
+        
+        n_dupl <- length(which(duplicated(paste(mt_track_id(data), mt_time(data)))))
+        
+        logger.info(
+          paste("Stacked data has", n_dupl, "duplicated location-time records. Removing",
+                "those with less info and then select the first if still duplicated.")
+        )
+        data <- mt_drop_duplicates(data)
+      }
+    }
+    
+    to_append <- list(
+      metadata = prod_meta |> dplyr::select(-self) |> dplyr::mutate(append_type = "stacked")
+    )
+    
+  } else{
+    
+    logger.info("Retrieved Product is not a 'move2_loc' object, so annexing it as an attribute of the input dataset.")
+    
+    if(is.null(data)){
+      
+      # i.e., if it's a starting app AND the retrieved object is not move2_loc, 
+      # generate empty move2 object to append retrieved objects to
+      data <- data.frame(timestamp = 1, track = "a", x = 0, y = 0) |> 
+        mt_as_move2("timestamp", "track", coords = c("x", "y")) |> 
+        filter_track_data(.track_id = "b") # make it empty
+    }
+    
+    to_append <- list(
+      metadata = prod_meta |> dplyr::select(-self) |> dplyr::mutate(append_type = "annexed"),
+      object = prod_obj
+    )
+    
+  }
+  
+  
+  # Appending metadata and data of fetched product to input data ----------------
   
   # either append as a newly created list, or add to previous appended list
   if(is.null(appended_products)){
@@ -245,12 +314,21 @@ rFunction = function(data = NULL,
   }
   
   
-  # Log out info on appended product
+  # Log out info on retrieved product
+  if(to_append$metadata$append_type == "stacked"){
+    logging_text <- "The following Product was stacked to the input dataset"    
+  }else{
+    logging_text <- paste0(
+      "The following Product was appended to list element #", 
+      appended_pos, 
+      " of attribute `appended_products` of the input data object"
+    )
+  }
+  
   cat(
     paste0(
-      "\nThe following Product was appended to list element #", appended_pos,
-      " of attribute `appended_products` of the input data object: \n\n",
-      "  Product: '", product_file, "' \n",
+      "\n", logging_text, ": \n\n",
+      "  Product: '", prod_meta$fileName, "' \n",
       "File Size: '", prod_meta$fileSize, "' \n",
       " Modified: '", prod_meta$modifiedAt, "' \n", 
       "      App: '", prod_meta$appTitle, "' \n",
@@ -373,7 +451,25 @@ get_product_object <- function(usr, pwd, product_link, file_ext){
 }
 
 
+#'////////////////////////////////////////////////////////////////////////////////////
+#' check if object is of type move2_loc, here defined as a move2 object with
+#' *at least one* non-empty location point
+is_move2_loc <- function(x){
+  mt_is_move2(x) && any(!sf::st_is_empty(x))
+}
 
+
+
+#'////////////////////////////////////////////////////////////////////////////////////
+#' Remove time-location duplicates without user interaction, selecting row with
+#' most-info. Code stolen from the MoveApp 'Movebank-Loc-move2'
+#' (https://github.com/movestore/Movebank-Loc-move2/blob/master/RFunction.R)
+mt_drop_duplicates <- function(x){
+  x %>%
+    dplyr::mutate(n_na = rowSums(is.na(pick(everything())))) %>%
+    dplyr::arrange(mt_track_id(.), mt_time(.), n_na) %>% 
+    mt_filter_unique(criterion='first') # this always needs to be "first" because the duplicates get ordered according to the number of columns with NA. 
+}
 
 
 #'////////////////////////////////////////////////////////////////////////////////////

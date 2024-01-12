@@ -27,7 +27,6 @@ test_that("App input validation does its job", {
     regexp = "Input for Workflow ID \\(`usr`\\) is missing."
   )
   
-  
   expect_error(
     rFunction(data = test_data, usr = "WHITESPACE IN USR"), 
     regexp = "Invalid Workflow ID \\(`usr`\\): string must not contain any whitespaces."
@@ -73,6 +72,11 @@ test_that("App input validation does its job", {
     rFunction(data = test_data, usr = usr, pwd = pwd, workflow_title = "blah", 
               app_title = "sometitle", app_pos = "ah", product_file = "somefile"), 
     regexp = "app_pos is not a numeric or integer vector"
+  )
+  
+  expect_error(
+    rFunction(data = test_data, usr = usr, pwd = pwd, track_combine = "WHATEVER"), 
+    regexp = "`track_combine` must be one of \"merge\" or \"rename\", not \"WHATEVER\""
   )
   
 })
@@ -156,7 +160,6 @@ test_that("App fetches and appends the correct target product", {
   expect_true(inherits(actual$object, "MoveStack"))
   
   
-  
   actual <- rFunction(
     data = test_data, usr = usr, pwd = pwd, workflow_title = "MOCK", 
     app_pos = 11, product_file = "app-output") |> 
@@ -183,7 +186,6 @@ test_that("App fetches and appends the correct target product", {
 
 
 
-
 test_that("App works with 'empty' input", {
   
   withr::local_envvar("APP_ARTIFACTS_DIR"="../../data/output/")
@@ -201,6 +203,133 @@ test_that("App works with 'empty' input", {
     
 })
 
+
+
+
+test_that("Retrieved product is stacked to input when of type move2_loc", {
+  
+  withr::local_envvar("APP_ARTIFACTS_DIR"="../../data/output/")
+  
+  # merge option
+  out_app1 <- rFunction(
+    data = test_data, usr = usr, pwd = pwd, workflow_title = "Mock Workflow", 
+    app_pos = 8, product_file = "app-output", track_combine = "merge")
+  
+  expect_gt(nrow(out_app1), nrow(test_data))
+  expect_equal(mt_n_tracks(out_app1), 3)
+  
+  app_prods <- attr(out_app1, "appended_products")
+  expect_true(app_prods[[1]]$metadata$append_type == "stacked")
+  
+  # consecutive call to App, this turn stacking with "rename" option
+  out_app2 <- rFunction(
+    data = out_app1, usr = usr, pwd = pwd, workflow_title = "Mock Workflow", 
+    app_pos = 8, product_file = "app-output", track_combine = "rename")
+  
+  expect_gt(nrow(out_app2), nrow(out_app1))
+  expect_equal(mt_n_tracks(out_app2), 5)
+  
+  app_prods <- attr(out_app2, "appended_products")
+  expect_length(app_prods, 2)
+  expect_true(app_prods[[2]]$metadata$append_type == "stacked")
+  expect_null(app_prods[[2]]$object)
+  
+})
+
+
+
+test_that("Retrieved product is annexed to input when NOT of type move2_loc", {
+  
+  withr::local_envvar("APP_ARTIFACTS_DIR"="../../data/output/")
+  
+  # retrieving move1 object
+  out_app1 <- rFunction(
+    data = test_data, usr = usr, pwd = pwd, workflow_title = "Mock Workflow", 
+    app_pos = 4, product_file = "app-output")
+  
+  expect_equal(nrow(out_app1), nrow(test_data))
+  expect_equal(mt_n_tracks(out_app1), mt_n_tracks(test_data))
+  
+  app_prods <- attr(out_app1, "appended_products")
+  expect_length(app_prods, 1)
+  expect_true(app_prods[[1]]$metadata$append_type == "annexed")
+  expect_s4_class(app_prods[[1]]$object, class = "MoveStack")
+  
+  
+  # sequentially retrieving data.frame object
+  out_app2 <- rFunction(
+    data = out_app1, usr = usr, pwd = pwd, workflow_title = "Mock Workflow", 
+    app_title = "Fit a Continuous-Time Movement Model (ctmm)", 
+    product_file = "model_summary.txt")
+  
+  expect_equal(nrow(out_app1), nrow(out_app2))
+  expect_equal(mt_n_tracks(out_app2), mt_n_tracks(out_app1))
+  
+  app_prods <- attr(out_app2, "appended_products")
+  expect_length(app_prods, 2)
+  expect_true(app_prods[[2]]$metadata$append_type == "annexed")
+  expect_s3_class(app_prods[[2]]$object, "data.frame")
+  
+})
+
+
+
+
+test_that("App works as a starting App", {
+  
+  withr::local_envvar("APP_ARTIFACTS_DIR"="../../data/output/")
+  
+  # retrieving a move2_loc - retrieved data becomes main data
+  out <- rFunction(
+    data = NULL, usr = usr, pwd = pwd, workflow_title = "Mock Workflow", 
+    app_pos = 7, product_file = "app-output")
+  
+  app_prods <- attr(out, "appended_products")
+  expect_length(app_prods, 1)
+  expect_true(app_prods[[1]]$metadata$append_type == "stacked")
+  expect_null(app_prods[[1]]$object)
+  
+  
+  # retrieving a data.frame - annexed to main data, which is an empty move2_loc
+  out <- rFunction(
+    data = NULL, usr = usr, pwd = pwd, workflow_title = "Mock Workflow", 
+    app_pos = 12, product_file = "model_summary")
+  
+  expect_equal(nrow(out), 0)
+  
+  app_prods <- attr(out, "appended_products")
+  expect_true(app_prods[[1]]$metadata$append_type == "annexed")
+  expect_s3_class(app_prods[[1]]$object, "data.frame")
+  
+})
+
+
+
+
+#' "is_move2_loc()" ===================================================
+test_that("move2_loc objects are correctly identified", {
+  
+  expect_true(is_move2_loc(test_data))
+  expect_true(
+    test_data |> 
+      sf::st_set_geometry(
+        sf::st_sfc(lapply(
+          1:nrow(test_data), 
+          # at least one non-empty location
+          function(x) if(x == 1) sf::st_point(c(1, 11)) else sf::st_point()
+        ))) |> 
+      is_move2_loc()
+  )
+  
+  expect_false(is_move2_loc(to_move(test_data)))
+  expect_false(is_move2_loc(data.frame()))
+  expect_false(
+    test_data |> 
+      sf::st_set_geometry(st_sfc(lapply(1:nrow(test_data), function(x) st_point()))) |> 
+      is_move2_loc()
+  )
+
+})
 
 
 

@@ -28,7 +28,8 @@ output <- rFunction(
   pwd = pwd, 
   workflow_title = "mock",
   app_pos = 8, 
-  product_file = "app-output")
+  product_file = "app-output", 
+  track_combine = "merge")
 
 attr(output, "appended_products")
 
@@ -45,7 +46,7 @@ output <- rFunction(
 attr(output, "appended_products")
 
 
-# Starting with data == NULL, i.e an empty move2 object
+# data == NULL AND retrieved data is move2_loc object
 output <- rFunction(
   data = NULL, 
   usr = usr, 
@@ -56,27 +57,18 @@ output <- rFunction(
 
 attr(output, "appended_products")
 
-
+# data == NULL AND retrieved data is not move2_loc
 output <- rFunction(
   data = NULL, 
   usr = usr, 
   pwd = pwd, 
   workflow_title = "mock",
-  app_pos = 8, 
-  product_file = "app-tput")
+  app_pos = 2,
+  product_file = "data_wtime")
+
+attr(output, "appended_products")
 
 
-
-
-# output <- rFunction(
-#   data = test_inputs$input2, 
-#   usr = usr, 
-#   pwd = pwd, 
-#   workflow_title = "mock",
-#   app_title = "Write Raster",
-#   product_file = "data_raster.grd")
-# 
-# attr(output, "appended_products")
 
 
 # ---------------------------------------- #
@@ -127,6 +119,7 @@ appended_prods[[1]]$object$Bateleur_8889 |> class()
 
 # ----- Simulating applying the App sequentially to append two products 
 
+# -- Two retrieved move2_nonloc products
 # 1st App
 run_sdk(
   data = test_inputs$input4, 
@@ -161,6 +154,36 @@ appended_prods[[1]]$object
 # second object appended - stored in second element of `appended_products`
 appended_prods[[2]]$metadata
 appended_prods[[2]]$object
+
+
+
+# -- Two retrieved move2_loc products
+# 1st App
+run_sdk(
+  data = test_inputs$input4, 
+  usr = usr, 
+  pwd = pwd, 
+  workflow_title = "mock", 
+  app_title = "Standardise Formats and Calculate Basic Statistics", 
+  product_file = "app-output") 
+
+output_app1 <- readRDS("data/output/output.rds"); output_app1
+attr(output_app1, "appended_products")
+
+
+# 2nd App
+run_sdk(
+  data = output_app1,
+  usr = usr, 
+  pwd = pwd, 
+  workflow_title = "mock",
+  app_title = "Standardise Formats and Calculate Basic Statistics", 
+  product_file = "app-output", 
+  track_combine = "merge"
+)
+
+output_app2 <- readRDS("data/output/output.rds"); output_app2
+attr(output_app2, "appended_products")
 
 
 
