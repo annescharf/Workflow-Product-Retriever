@@ -63,7 +63,8 @@ run_sdk <- function(data, usr, pwd,
                     workflow_title, 
                     app_title = NULL, 
                     app_pos = NULL, 
-                    product_file){
+                    product_file, 
+                    track_combine = "rename"){
   
   require(jsonlite)
   is.numeric(data) # just a trick to force error when object passed on to data doesn't exists
@@ -86,6 +87,8 @@ run_sdk <- function(data, usr, pwd,
   new_app_config$app_title <- app_title
   new_app_config$app_pos <- app_pos
   new_app_config$product_file <- product_file
+  new_app_config$track_combine <- track_combine
+  
   
   # overwrite config file with current inputs
   write(
