@@ -28,7 +28,7 @@
     {
       "id": "app_pos",
       "name": "Target App Position in Workflow",
-      "description": "Enter the position of the App containing the target Product in the Workflow's pipeline. Not required if 'Target App Title' is specified.",
+      "description": "Enter the position of the App containing the target Product in the Workflow's pipeline (note: initial App is in position 1). Not required if 'Target App Title' is specified.",
       "defaultValue": null,
       "type": "INTEGER"
     },
@@ -43,15 +43,15 @@
       "name": "Duplicated Track IDs",
       "description": "If the target Product is a 'move2_loc' object, you can choose how to handle potential duplicated track IDs when stacking input and retrieved datasets. The 'Merge' option combines tracks with the same name, while the 'Rename' option assigns new names to non-unique tracks.",
       "type": "RADIOBUTTONS",
-      "defaultValue": "rename",
+      "defaultValue": "merge",
       "options": [
-        {
-          "value": "rename",
-          "displayText": "Rename"
-        },
         {
           "value": "merge",
           "displayText": "Merge"
+        },
+        {
+          "value": "rename",
+          "displayText": "Rename"
         }
         ]
     }
