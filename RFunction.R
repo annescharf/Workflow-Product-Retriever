@@ -386,6 +386,16 @@ get_workflow_products <- function(usr, pwd){
         error = cnd, 
         class = "httr2_http_401"
       )
+    },
+    httr2_http_400 = function(cnd){
+      rlang::abort(
+        message = paste0(
+          "API request error: Failed to retrieve Workflow details due to invalid ",
+          "Workflow API ID (`usr`) and/or API Password (`pwd`)"),
+        parent = NA,
+        error = cnd,
+        class = "httr2_http_400"
+      )
     }
   )
 }
