@@ -186,7 +186,6 @@ output_app2 <- readRDS("data/output/output.rds"); output_app2
 attr(output_app2, "appended_products")
 
 
-
 # ------- Incorrectly specified parameters
 run_sdk(
   data = test_inputs$input3,

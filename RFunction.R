@@ -248,7 +248,7 @@ rFunction = function(data = NULL,
         
         prod_obj <- sf::st_transform(prod_obj, sf::st_crs(data))
         
-        logger.info(
+        logger.warn(
           paste0(
             "Input and retrieved datasets are in different CRS projections. ",
             "The retrieved dataset has been re-projected to produce a combined ",
@@ -269,7 +269,7 @@ rFunction = function(data = NULL,
         
         n_dupl <- length(which(duplicated(paste(mt_track_id(data), mt_time(data)))))
         
-        logger.info(
+        logger.warn(
           paste("Stacked data has", n_dupl, "duplicated location-time records. Removing",
                 "those with less info and then select the first if still duplicated.")
         )
@@ -283,7 +283,7 @@ rFunction = function(data = NULL,
     
   } else{
     
-    logger.info("Retrieved Product is not a 'move2_loc' object, so annexing it as an attribute of the input dataset.")
+    logger.info("Retrieved Product is not a 'move2_loc' object, so attaching it as an attribute of the input dataset.")
     
     if(is.null(data)){
       
@@ -321,7 +321,7 @@ rFunction = function(data = NULL,
     logging_text <- paste0(
       "The following Product was appended to list element #", 
       appended_pos, 
-      " of attribute `appended_products` of the input data object"
+      " of attribute `appended_products` of the output object"
     )
   }
   
@@ -373,6 +373,7 @@ get_workflow_products <- function(usr, pwd){
       Authorization = paste0("Basic ", openssl::base64_encode(paste0(usr, ":", pwd))), 
       Accept = "application/json"
     )
+  
   
   # submit request and convert from json format
   rlang::try_fetch(

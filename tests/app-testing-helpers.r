@@ -64,7 +64,7 @@ run_sdk <- function(data, usr, pwd,
                     app_title = NULL, 
                     app_pos = NULL, 
                     product_file, 
-                    track_combine = "rename"){
+                    track_combine = "merge"){
   
   require(jsonlite)
   is.numeric(data) # just a trick to force error when object passed on to data doesn't exists
