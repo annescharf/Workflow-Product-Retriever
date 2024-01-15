@@ -238,7 +238,7 @@ test_that("Retrieved product is stacked to input when of type move2_loc", {
 
 
 
-test_that("Retrieved product is annexed to input when NOT of type move2_loc", {
+test_that("Retrieved product is attached to input when NOT of type move2_loc", {
   
   withr::local_envvar("APP_ARTIFACTS_DIR"="../../data/output/")
   
@@ -252,7 +252,7 @@ test_that("Retrieved product is annexed to input when NOT of type move2_loc", {
   
   app_prods <- attr(out_app1, "appended_products")
   expect_length(app_prods, 1)
-  expect_true(app_prods[[1]]$metadata$append_type == "annexed")
+  expect_true(app_prods[[1]]$metadata$append_type == "attached")
   expect_s4_class(app_prods[[1]]$object, class = "MoveStack")
   
   
@@ -267,7 +267,7 @@ test_that("Retrieved product is annexed to input when NOT of type move2_loc", {
   
   app_prods <- attr(out_app2, "appended_products")
   expect_length(app_prods, 2)
-  expect_true(app_prods[[2]]$metadata$append_type == "annexed")
+  expect_true(app_prods[[2]]$metadata$append_type == "attached")
   expect_s3_class(app_prods[[2]]$object, "data.frame")
   
 })
@@ -290,7 +290,7 @@ test_that("App works as a starting App", {
   expect_null(app_prods[[1]]$object)
   
   
-  # retrieving a data.frame - annexed to main data, which is an empty move2_loc
+  # retrieving a data.frame - attached to main data, which is an empty move2_loc
   out <- rFunction(
     data = NULL, usr = usr, pwd = pwd, workflow_title = "Mock Workflow", 
     app_pos = 12, product_file = "model_summary")
@@ -298,7 +298,7 @@ test_that("App works as a starting App", {
   expect_equal(nrow(out), 0)
   
   app_prods <- attr(out, "appended_products")
-  expect_true(app_prods[[1]]$metadata$append_type == "annexed")
+  expect_true(app_prods[[1]]$metadata$append_type == "attached")
   expect_s3_class(app_prods[[1]]$object, "data.frame")
   
 })

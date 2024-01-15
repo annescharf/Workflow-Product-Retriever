@@ -295,7 +295,7 @@ rFunction = function(data = NULL,
     }
     
     to_append <- list(
-      metadata = prod_meta |> dplyr::select(-self) |> dplyr::mutate(append_type = "annexed"),
+      metadata = prod_meta |> dplyr::select(-self) |> dplyr::mutate(append_type = "attached"),
       object = prod_obj
     )
     
