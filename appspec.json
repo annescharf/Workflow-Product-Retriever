@@ -4,13 +4,15 @@
       "id": "usr",
       "name": "ID of Target Workflow Instance",
       "description": "Type-in the API's ID (i.e. username) of the Workflow Instance containing the target Product (check https://docs.moveapps.org/#/API).",
-      "type": "STRING"
+      "type": "STRING",
+      "defaultValue": null
     },
     {
       "id": "pwd",
       "name": "Password of Target Workflow Instance",
       "description": "Type-in the API's Password of the Workflow Instance containing the target Product (check https://docs.moveapps.org/#/API).",
-      "type": "STRING"
+      "type": "SECRET",
+      "defaultValue": null
     },
     {
       "id": "workflow_title",
