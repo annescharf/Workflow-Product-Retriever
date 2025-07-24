@@ -3,13 +3,13 @@
    {
       "id": "usr",
       "name": "ID of Target Workflow Instance",
-      "description": "Type-in the API's ID (i.e. username) of the Workflow Instance containing the target Product (check https://docs.moveapps.org/#/API).",
+      "description": "Insert the API's ID (i.e. username) of the Workflow Instance containing the target Product (check https://docs.moveapps.org/#/API).",
       "type": "STRING"
     },
     {
       "id": "pwd",
       "name": "Password of Target Workflow Instance",
-      "description": "Type-in the API's Password of the Workflow Instance containing the target Product (check https://docs.moveapps.org/#/API).",
+      "description": "Insert the API's Password of the Workflow Instance containing the target Product (check https://docs.moveapps.org/#/API).",
       "type": "STRING"
     },
     {
@@ -21,7 +21,7 @@
     {
       "id": "app_title",
       "name": "Target App Title",
-      "description": "Enter the name of the App comprising the target Product. Please ensure the name of the App is accurate. Not required if 'Target App Position in Workflow' is specified.",
+      "description": "Enter the name of the App comprising the target Product. Not required if 'Target App Position in Workflow' is specified.",
       "defaultValue": null,
       "type": "STRING"
     },
@@ -35,13 +35,13 @@
     {
       "id": "product_file",
       "name": "Target Product Filename",
-      "description": "Type-in the target Product name. Please ensure the filename is accurate. You can omit the file extension, unless multiple artifact files in the target App share the same basename . Currently supported target Product file-types: '.rds', '.csv', and '.txt'.",
+      "description": "Type-in the filename of the target Product. File extension can be ommited, unless multiple artifact files in the target App share the same basename . Currently supported target Product file-types: '.rds', '.csv', and '.txt'.",
       "type": "STRING"
     },
     {
       "id": "track_combine",
       "name": "Duplicated Track IDs",
-      "description": "If the target Product is a 'move2_loc' object, you can choose how to handle potential duplicated track IDs when stacking input and retrieved datasets. The 'Merge' option combines tracks with the same name, while the 'Rename' option assigns new names to non-unique tracks.",
+      "description": "If the target Product is a 'move2_loc' object, choose how to handle potential duplicated track IDs when stacking input and retrieved datasets. The 'Merge' option combines tracks with the same name, while the 'Rename' option assigns new names to non-unique tracks.",
       "type": "RADIOBUTTONS",
       "defaultValue": "merge",
       "options": [
