@@ -1,4 +1,5 @@
 
+
 # Workflow Product Retriever
 
 MoveApps
@@ -49,17 +50,13 @@ Workflow, to collect multiple Products from other Workflows.
 Furthermore, it can function as either the initial App of a Workflow or
 as an intermediary App.
 
-<div>
-
-> **Important**
+> [!IMPORTANT]
 >
 > In order to use the App’s functionality, the user must first create
 > stable API links to the Workflow instance containing the desired
 > Product(s). Instructions for generating API access credentials for
 > your Workflows are available in the [MoveApps API Links
 > guide](https://docs.moveapps.org/#/API).
-
-</div>
 
 Using the Workflow instance API access credentials, users are required
 to specify the name of the target Product, along with either the title
@@ -131,26 +128,25 @@ with the target Product. While we recommend using the full title for
 clarity, aliases or acronyms are accepted. Default: `NULL`.
 
 **Target App Title** (`app_title`): the name of the App comprising the
-target Product. Please ensure the name of the App is accurate. Not
-required if ‘Target App Position in Workflow’ is specified. Default:
-`NULL`.
+target Product. Please ensure spelling is accurate. Not required if
+‘Target App Position in Workflow’ is specified. Default: `NULL`.
 
 **Target App Position in Workflow** (`app_pos`): Enter the position of
 the App containing the target Product in the Workflow’s pipeline (note:
 initial App is in position 1). Not required if ‘Target App Title’ is
 specified. Default: `NULL`.
 
-**Target Product Filename** (`product_file`): the target Product name.
-Please ensure the filename is accurate. You can omit the extension,
-unless multiple artifact files in the target App share the same
+**Target Product Filename** (`product_file`): the target Product
+filename. Please ensure spelling is accurate. File extension can be
+omitted, unless multiple artifact files in the target App share the same
 basename. Currently supported target Product file-types: ‘.rds’, ‘.csv’,
 and ‘.txt’. Default: `NULL`.
 
 **Duplicated Track IDs** (`track_combine`): If the target Product is a
-`move2::move2_loc` object, you can choose how to handle potential
-duplicated track IDs when stacking input and retrieved datasets. The
-‘Merge’ option combines tracks with the same name, while the ‘Rename’
-option assigns new names to non-unique tracks. Default: ‘Merge’.
+`move2::move2_loc` object, choose how to handle potential duplicated
+track IDs when stacking input and retrieved datasets. The ‘Merge’ option
+combines tracks with the same name, while the ‘Rename’ option assigns
+new names to non-unique tracks. Default: ‘Merge’.
 
 ### Most common errors
 
@@ -164,17 +160,13 @@ misspecification occurred. Most common misspecifications include:
 - inconsistency between the specified name of the target App and the
   specified position of that App in the target Workflow.
 
-<div>
-
-> **Caution**
+> [!CAUTION]
 >
 > This App was developed based on the existing structure and attribute
 > names underlying MoveApps’s API framework. If there are changes to
 > naming conventions or modifications in the way API links are
 > constructed in the future, the code will be susceptible to HTTP
 > request errors.
-
-</div>
 
 ### Null or error handling
 
@@ -286,8 +278,8 @@ purrr::map(apnd_prods, ~.$metadata)
     [[1]]
       workflow_title        instance_title appPositionInWorkflow
     1           Mock Workflow Instance 001                     2
-                      appTitle       fileName   mimeType fileSize
-    1 Add Local and Solar Time data_wtime.csv text/plain   172252
+                            appTitle       fileName mimeType fileSize
+    1 Add Local and Solar Time move1 data_wtime.csv text/csv   172252
                        modifiedAt file_basename file_ext append_type
     1 2023-11-01T15:46:49.336246Z    data_wtime      csv    attached
 

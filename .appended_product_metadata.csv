@@ -1,0 +1,2 @@
+workflow_title,instance_title,appPositionInWorkflow,appTitle,fileName,mimeType,fileSize,modifiedAt,file_basename,file_ext,append_type
+mock,Workflow Instance 001,8,Standardise Formats and Calculate Basic Statistics,app-output.rds,application/r-rds,22417,2024-01-08T14:12:24.868915Z,app-output,rds,stacked
