@@ -136,7 +136,7 @@ target Product. While we recommend using the full title for clarity, aliases or
 acronyms are accepted. Default: `NULL`.
 
 **Target App Title** (`app_title`): the name of the App comprising the target
-Product. Please ensure the name of the App is accurate. Not required if 'Target
+Product. Please ensure spelling is accurate. Not required if 'Target
 App Position in Workflow' is specified. Default: `NULL`.
 
 **Target App Position in Workflow** (`app_pos`): Enter the position of the App
@@ -144,13 +144,13 @@ containing the target Product in the Workflow's pipeline (note: initial App is
 in position 1). Not required if 'Target App Title' is specified. Default:
 `NULL`.
 
-**Target Product Filename** (`product_file`): the target Product name. Please
-ensure the filename is accurate. You can omit the extension, unless multiple
+**Target Product Filename** (`product_file`): the target Product filename. Please
+ensure spelling is accurate. File extension can be omitted, unless multiple
 artifact files in the target App share the same basename. Currently supported
 target Product file-types: '.rds', '.csv', and '.txt'. Default: `NULL`.
 
 **Duplicated Track IDs** (`track_combine`): If the target Product is a
-`move2::move2_loc` object, you can choose how to handle potential duplicated
+`move2::move2_loc` object, choose how to handle potential duplicated
 track IDs when stacking input and retrieved datasets. The 'Merge' option
 combines tracks with the same name, while the 'Rename' option assigns new names
 to non-unique tracks. Default: 'Merge'.
